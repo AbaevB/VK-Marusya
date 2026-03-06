@@ -21,13 +21,13 @@
         text-align: center;
         padding-top: 22px;
         padding-bottom: 30px;
-        background-color: #000;
+        background-color: $color-black;
     }
 
     &__text {
         font-weight: 700;
         font-size: 24px;
         line-height: 32px;
-        color: #fff;
+        color: $color-white;
     }
 }

@@ -11,14 +11,14 @@
     font-weight: 700;
     font-size: 48px;
     line-height: 56px;
-    color: #fff;
+    color: $color-white;
   }
 
   &__tab-btn {
 
     &--active {
       pointer-events: none;
-      color: red;
+      color: $color-red;
     }
   }
 
@@ -48,12 +48,12 @@
     font-weight: 400;
     font-size: 24px;
     line-height: 32px;
-    color: #fff;
+    color: $color-white;
     cursor: pointer;
 
     &--active {
       pointer-events: none;
-      border-color: #DC5DFC;
+      border-color: $color-accent;
     }
   }
 
@@ -112,8 +112,8 @@
     height: 40px;
     border: none;
     border-radius: 100%;
-    background-color: #fff;
-    color: #000;
+    background-color: $color-white;
+    color: $color-black;
     cursor: pointer;
 
     &--active {
@@ -138,8 +138,8 @@
     border-radius: 100%;
     width: 60px;
     height: 60px;
-    background-color:  rgba(255, 255, 255, 0.5);
-    color: #fff;
+    background-color:  $color-bg-light;
+    color: $color-white;
     font-weight: 700;
     font-size: 24px;
     line-height: 32px;
@@ -165,13 +165,13 @@
     font-weight: 400;
     font-size: 18px;
     line-height: 24px;
-    color: #fff;
+    color: $color-white;
   }
 
   &__user-list-data {
     font-weight: 700;
     font-size: 24px;
     line-height: 32px;
-    color: #fff;
+    color: $color-white;
   }
 }

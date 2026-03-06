@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFilmsStore } from '@/stores/films'
 import { useUserStore } from '@/stores/user'
 import { useFavoritesStore } from '@/stores/favorites'
+import Plyr from 'plyr'
+import 'plyr/dist/plyr.css'
 
 const route = useRoute()
 const filmsStore = useFilmsStore()
@@ -12,6 +14,7 @@ const favoritesStore = useFavoritesStore()
 
 const filmId = computed(() => parseInt(route.params.id as string))
 const isTrailerModalOpen = ref(false)
+let player: Plyr | null = null
 
 onMounted(() => {
   filmsStore.fetchFilmById(filmId.value)
@@ -21,31 +24,88 @@ const isFavorite = computed(() => {
   return favoritesStore.isFavorite(filmId.value)
 })
 
+const favoriteError = ref<string | null>(null)
+
 const handleFavoriteClick = async () => {
-  if (!userStore.isAuthenticated) {
-    // TODO: Открыть модальное окно авторизации
-    console.log('Пользователь не авторизован, нужно открыть модальное окно логина')
+  if (!userStore.isInitialized) {
     return
   }
   
+  if (!userStore.isAuthenticated) {
+    // Открываем модальное окно авторизации
+    if (window.openAuthModal) {
+      window.openAuthModal()
+    }
+    return
+  }
+  
+  favoriteError.value = null
   try {
     await favoritesStore.toggleFavorite(filmId.value)
-  } catch (error) {
-    console.error('Ошибка при работе с избранным:', error)
+  } catch (error: any) {
+    favoriteError.value = error?.response?.data?.message || 'Не удалось добавить в избранное'
   }
 }
 
-const openTrailer = () => {
+const videoElement = ref<HTMLVideoElement | null>(null)
+
+const openTrailer = async () => {
+  const trailerUrl = filmsStore.currentFilm?.trailerUrl
+  if (!trailerUrl) return
+  
   isTrailerModalOpen.value = true
+  
+  // Небольшая задержка для рендера DOM
+  await new Promise(resolve => setTimeout(resolve, 100))
+  await nextTick()
+  
+  // Извлекаем video ID
+  let videoId = ''
+  if (trailerUrl.includes('youtube.com/embed/')) {
+    videoId = trailerUrl.split('youtube.com/embed/')[1]?.split('?')[0] || ''
+  } else if (trailerUrl.includes('youtube.com/watch')) {
+    const url = new URL(trailerUrl)
+    videoId = url.searchParams.get('v') || ''
+  } else if (trailerUrl.includes('youtu.be/')) {
+    videoId = trailerUrl.split('youtu.be/')[1]?.split('?')[0] || ''
+  }
+  
+  if (videoId && videoElement.value) {
+    player = new Plyr(videoElement.value, {
+      autoplay: true,
+      controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen', 'pip']
+    })
+    
+    player.source = {
+      type: 'video',
+      sources: [
+        {
+          src: videoId,
+          provider: 'youtube'
+        }
+      ]
+    }
+  }
 }
 
 const closeTrailer = () => {
   isTrailerModalOpen.value = false
+  // Очищаем плеер
+  if (player) {
+    player.destroy()
+    player = null
+  }
 }
+
+onUnmounted(() => {
+  if (player) {
+    player.destroy()
+  }
+})
 </script>
 
 <template>
-  <main class="film-page">
+  <section class="film">
     <div class="container">
       <div v-if="filmsStore.isLoading && !filmsStore.currentFilm" class="loading">
         Загрузка информации о фильме...
@@ -55,295 +115,131 @@ const closeTrailer = () => {
         {{ filmsStore.error }}
       </div>
       
-      <div v-else-if="filmsStore.currentFilm" class="film-details">
-        <div class="film-details__header">
-          <div class="film-details__poster">
-            <img 
-              :src="filmsStore.currentFilm.posterUrl" 
-              :alt="filmsStore.currentFilm.title"
-              class="film-details__poster-image"
-            />
-          </div>
-          
-          <div class="film-details__info">
-            <h1 class="film-details__title">{{ filmsStore.currentFilm.title }}</h1>
-            
-            <div class="film-details__rating">
-              <span class="film-details__rating-value">
-                Рейтинг: {{ filmsStore.currentFilm.tmdbRating?.toFixed(1) || '—' }}
+      <div v-else-if="filmsStore.currentFilm" class="film__inner">
+        <div class="film__content">
+          <ul class="film__content-top">
+            <li class="film__content-top-item">
+              <div class="film__rating film__rating--green">
+                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                  <use xlink:href="/images/sprite.svg#icon-star"></use>
+                </svg>
+                <span class="film__rating-text">
+                  {{ filmsStore.currentFilm.tmdbRating?.toFixed(1) || '—' }}
+                </span>
+              </div>
+            </li>
+            <li class="film__content-top-item">
+              <span class="film__year">
+                {{ filmsStore.currentFilm.releaseYear }}
               </span>
-            </div>
-            
-            <div class="film-details__meta">
-              <div class="film-details__meta-item">
-                <span class="film-details__meta-label">Год:</span>
-                <span class="film-details__meta-value">{{ filmsStore.currentFilm.releaseYear }}</span>
-              </div>
-              
-              <div class="film-details__meta-item">
-                <span class="film-details__meta-label">Длительность:</span>
-                <span class="film-details__meta-value">{{ filmsStore.currentFilm.runtime }} мин.</span>
-              </div>
-              
-              <div class="film-details__meta-item">
-                <span class="film-details__meta-label">Режиссёр:</span>
-                <span class="film-details__meta-value">{{ filmsStore.currentFilm.director || '—' }}</span>
-              </div>
-              
-              <div class="film-details__meta-item">
-                <span class="film-details__meta-label">Жанры:</span>
-                <span class="film-details__meta-value">{{ filmsStore.currentFilm.genres?.join(', ') || '—' }}</span>
-              </div>
-              
-              <div class="film-details__meta-item">
-                <span class="film-details__meta-label">Актёры:</span>
-                <span class="film-details__meta-value">{{ filmsStore.currentFilm.cast?.join(', ') || '—' }}</span>
-              </div>
-            </div>
-            
-            <div class="film-details__actions">
-              <button
-                @click="openTrailer"
-                class="film-details__trailer-btn"
-              >
-                Смотреть трейлер
-              </button>
-              
-              <button
-                @click="handleFavoriteClick"
-                :class="['film-details__favorite-btn', { 'film-details__favorite-btn--active': isFavorite }]"
-              >
-                {{ isFavorite ? 'В избранном' : 'В избранное' }}
-              </button>
-            </div>
+            </li>
+            <li class="film__content-top-item">
+              <span class="film__genre">
+                {{ filmsStore.currentFilm.genres?.join(', ') || '—' }}
+              </span>
+            </li>
+            <li class="film__content-top-item">
+              <span class="random__film__duration">
+                {{ filmsStore.currentFilm.runtime }} мин
+              </span>
+            </li> 
+          </ul>
+          <div class="film__content-body">
+            <h1 class="film__title">
+              {{ filmsStore.currentFilm.title }}
+            </h1>
+            <p class="film__description">
+              {{ filmsStore.currentFilm.plot }}
+            </p>
+          </div>
+          <div class="film__content-bottom">
+            <button class="btn btn-primary" type="button" @click="openTrailer">
+              Трейлер
+            </button>
+            <button class="btn btn-primary btn-primary--icon" type="button" @click="handleFavoriteClick">
+              <svg class="btn-primary__icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
+                <use xlink:href="/images/sprite.svg#icon-heart"></use>
+              </svg>
+            </button>
+            <span v-if="favoriteError" class="error-message">{{ favoriteError }}</span>
           </div>
         </div>
-        
-        <div class="film-details__description">
-          <h2 class="film-details__description-title">Описание</h2>
-          <p class="film-details__description-text">
-            {{ filmsStore.currentFilm.plot }}
-          </p>
+        <div class="film__image-wrapper">
+          <img class="film__image" :src="filmsStore.currentFilm.posterUrl" :alt="`Кадр из фильма ${filmsStore.currentFilm.title}`">
+        </div>
+        <div class="film__info">
+          <h2 class="film__info-title">
+            О фильме 
+          </h2>
+          <ul class="film__info-list">
+            <li class="film__info-item">
+              <div class="film__info-item-left">
+                Язык оригинала
+              </div>
+              <div class="film__info-item-right">
+                {{ filmsStore.currentFilm.language || '—' }}
+              </div>
+            </li>
+            <li class="film__info-item">
+              <div class="film__info-item-left">
+                Бюджет
+              </div>
+              <div class="film__info-item-right">
+                {{ filmsStore.currentFilm.budget || '—' }}
+              </div>
+            </li>
+            <li class="film__info-item">
+              <div class="film__info-item-left">
+                Выручка
+              </div>
+              <div class="film__info-item-right">
+                {{ filmsStore.currentFilm.revenue || '—' }}
+              </div>
+            </li>
+            <li class="film__info-item">
+              <div class="film__info-item-left">
+                Режиссёр
+              </div>
+              <div class="film__info-item-right">
+                {{ filmsStore.currentFilm.director || '—' }}
+              </div>
+            </li>
+            <li class="film__info-item">
+              <div class="film__info-item-left">
+                Продакшен 
+              </div>
+              <div class="film__info-item-right">
+                {{ filmsStore.currentFilm.production || '—' }}
+              </div>
+            </li>
+            <li class="film__info-item">
+              <div class="film__info-item-left">
+                Награды
+              </div>
+              <div class="film__info-item-right">
+                {{ filmsStore.currentFilm.awardsSummary || '—' }}
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
     
-    <!-- Модальное окно трейлера -->
-    <div v-if="isTrailerModalOpen" class="modal">
-      <div class="modal__overlay" @click="closeTrailer"></div>
-      <div class="modal__content">
-        <button class="modal__close" @click="closeTrailer">×</button>
-        <div class="modal__trailer">
-          <iframe
-            v-if="filmsStore.currentFilm?.trailerUrl"
-            :src="filmsStore.currentFilm.trailerUrl"
-            width="800"
-            height="450"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
+    <!-- Модальное окно трейлера с Plyr -->
+    <div v-if="isTrailerModalOpen" class="modal modal--active" @click.self="closeTrailer">
+      <div class="preview">
+        <button type="button" class="modal__close" @click="closeTrailer">
+          <svg class="modal__close-icon" aria-hidden="true" width="13" height="13">
+            <use xlink:href="/images/sprite.svg#icon-close-black"></use>
+          </svg>
+        </button>
+        <div class="plyr__video-embed plyr-player">
+          <video ref="videoElement" class="plyr-video" playsinline controls crossorigin="anonymous">
+            <source :src="filmsStore.currentFilm?.trailerUrl" type="video/youtube">
+          </video>
         </div>
       </div>
     </div>
-  </main>
+  </section>
 </template>
 
-<style scoped>
-.film-page {
-  padding: 40px 0;
-}
-
-.loading, .error {
-  text-align: center;
-  padding: 100px 0;
-  font-size: 18px;
-}
-
-.error {
-  color: #ff0000;
-}
-
-.film-details__header {
-  display: flex;
-  gap: 40px;
-  margin-bottom: 40px;
-}
-
-.film-details__poster {
-  flex: 0 0 300px;
-}
-
-.film-details__poster-image {
-  width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.film-details__info {
-  flex: 1;
-}
-
-.film-details__title {
-  font-size: 36px;
-  margin: 0 0 20px 0;
-  color: #333;
-}
-
-.film-details__rating {
-  margin-bottom: 25px;
-}
-
-.film-details__rating-value {
-  font-size: 24px;
-  font-weight: 600;
-  color: #007bff;
-}
-
-.film-details__meta {
-  margin-bottom: 30px;
-}
-
-.film-details__meta-item {
-  margin-bottom: 12px;
-  display: flex;
-}
-
-.film-details__meta-label {
-  font-weight: 600;
-  color: #333;
-  min-width: 120px;
-}
-
-.film-details__meta-value {
-  color: #666;
-}
-
-.film-details__actions {
-  display: flex;
-  gap: 15px;
-  margin-top: 30px;
-}
-
-.film-details__trailer-btn,
-.film-details__favorite-btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.film-details__trailer-btn {
-  background-color: #007bff;
-  color: white;
-}
-
-.film-details__trailer-btn:hover {
-  background-color: #0056b3;
-}
-
-.film-details__favorite-btn {
-  background-color: #f8f9fa;
-  color: #333;
-  border: 1px solid #dee2e6;
-}
-
-.film-details__favorite-btn:hover {
-  background-color: #e9ecef;
-}
-
-.film-details__favorite-btn--active {
-  background-color: #ff0000;
-  color: white;
-  border-color: #ff0000;
-}
-
-.film-details__favorite-btn--active:hover {
-  background-color: #cc0000;
-}
-
-.film-details__description {
-  background-color: #f8f9fa;
-  padding: 30px;
-  border-radius: 8px;
-}
-
-.film-details__description-title {
-  font-size: 24px;
-  margin: 0 0 20px 0;
-  color: #333;
-}
-
-.film-details__description-text {
-  font-size: 16px;
-  line-height: 1.6;
-  color: #666;
-  margin: 0;
-}
-
-/* Модальное окно */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal__overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-.modal__content {
-  position: relative;
-  background-color: white;
-  border-radius: 8px;
-  padding: 30px;
-  max-width: 900px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal__close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  height: 30px;
-  border: none;
-  background: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #333;
-}
-
-.modal__close:hover {
-  color: #007bff;
-}
-
-.modal__trailer {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
-  height: 0;
-}
-
-.modal__trailer iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-</style>

@@ -19,15 +19,36 @@ export interface User {
   lastName: string
 }
 
+// Функция для преобразования в x-www-form-urlencoded
+const toFormData = (data: Record<string, string>) => {
+  return Object.entries(data)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join('&')
+}
+
 export const authApi = {
-  // Вход в систему
+  // Вход в систему - также x-www-form-urlencoded
   login(data: LoginData) {
-    return api.post('/auth/login', data)
+    const formData = toFormData({
+      email: data.email,
+      password: data.password
+    })
+    return api.post('/auth/login', formData, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    })
   },
 
-  // Регистрация
+  // Регистрация - x-www-form-urlencoded
   register(data: RegisterData) {
-    return api.post('/user', data)
+    const formData = toFormData({
+      email: data.email,
+      password: data.password,
+      name: data.firstName,
+      surname: data.lastName
+    })
+    return api.post('/user', formData, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    })
   },
 
   // Выход

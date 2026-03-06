@@ -3,10 +3,12 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { useFavoritesStore } from '@/stores/favorites'
 import AuthModal from '@/components/modals/AuthModal.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
+const favoritesStore = useFavoritesStore()
 
 const isAuthModalOpen = ref(false)
 
@@ -48,10 +50,13 @@ const closeAuthModal = () => {
   isAuthModalOpen.value = false
 }
 
-const handleAuthSuccess = () => {
+const handleAuthSuccess = async () => {
   closeAuthModal()
-  // Можно обновить данные пользователя
-  userStore.fetchCurrentUser()
+  // Обновляем данные пользователя и загружаем избранное
+  await userStore.fetchCurrentUser()
+  if (userStore.isAuthenticated) {
+    await favoritesStore.fetchFavorites()
+  }
 }
 </script>
 
@@ -112,12 +117,12 @@ const handleAuthSuccess = () => {
           </li>
         </ul>
       
-        <button class="header__btn" type="button" @click="handleAccountClick">
-          <svg width="24" height="24" class="header__btn-icon" aria-hidden="true">
+        <button class="header__bth" type="button" @click="handleAccountClick">
+          <svg width="24" height="24" class="header__bth-icon" aria-hidden="true">
             <use xlink:href="/images/sprite.svg#icon-user"></use>
           </svg>
-          <span class="header__btn-text">
-            {{ isAuthenticated ? userName : 'Войти' }}
+          <span class="header__bth-text">
+            {{ isAuthenticated ? 'Аккаунт' : 'Войти' }}
           </span>
         </button>
       </div>
@@ -130,142 +135,3 @@ const handleAuthSuccess = () => {
   />
 </template>
 
-<style scoped>
-.header {
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 15px 0;
-}
-
-.header__wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.header__logo {
-  display: block;
-  text-decoration: none;
-}
-
-.header__logo-img {
-  height: 40px;
-  width: auto;
-}
-
-.header__list {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  gap: 30px;
-  align-items: center;
-}
-
-.header__item {
-  display: flex;
-  align-items: center;
-}
-
-.header__link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: #333;
-  padding: 8px 12px;
-  border-radius: 4px;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.header__link:hover {
-  background-color: #f5f5f5;
-  color: #007bff;
-}
-
-.header__link--active {
-  color: #007bff;
-  background-color: #e6f2ff;
-}
-
-.header__link-text {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.header__link-icon {
-  fill: currentColor;
-}
-
-.header__search {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.header__search-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: text;
-}
-
-.header__search-icon {
-  fill: #666;
-}
-
-.header__search-field {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 8px 12px;
-  font-size: 14px;
-  min-width: 200px;
-}
-
-.header__search-field:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-.header__search-btn {
-  background: none;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  color: #666;
-  transition: color 0.2s ease;
-}
-
-.header__search-btn:hover {
-  color: #007bff;
-}
-
-.header__form-icon {
-  fill: currentColor;
-}
-
-.header__btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: none;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  color: #333;
-  font-size: 16px;
-  font-weight: 500;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.header__btn:hover {
-  background-color: #f5f5f5;
-  color: #007bff;
-}
-
-.header__btn-icon {
-  fill: currentColor;
-}
-</style>

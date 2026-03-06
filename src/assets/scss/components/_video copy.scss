@@ -3,8 +3,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
+  background: $color-bg-overlay;
+  color: $color-white;
   padding: 20px 40px;
   border-radius: 12px;
   font-size: 24px;
