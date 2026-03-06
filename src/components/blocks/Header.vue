@@ -3,10 +3,12 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { useFavoritesStore } from '@/stores/favorites'
 import AuthModal from '@/components/modals/AuthModal.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
+const favoritesStore = useFavoritesStore()
 
 const isAuthModalOpen = ref(false)
 
@@ -48,10 +50,13 @@ const closeAuthModal = () => {
   isAuthModalOpen.value = false
 }
 
-const handleAuthSuccess = () => {
+const handleAuthSuccess = async () => {
   closeAuthModal()
-  // Можно обновить данные пользователя
-  userStore.fetchCurrentUser()
+  // Обновляем данные пользователя и загружаем избранное
+  await userStore.fetchCurrentUser()
+  if (userStore.isAuthenticated) {
+    await favoritesStore.fetchFavorites()
+  }
 }
 </script>
 

@@ -1,7 +1,15 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import api from '@/api'
+import { filmsApi } from '@/api/films'
 import type { Film } from '@/api/films'
+
+// Функция для отправки данных в формате x-www-form-urlencoded
+const toFormData = (data: Record<string, string | number>) => {
+  return Object.entries(data)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+    .join('&')
+}
 
 export const useFavoritesStore = defineStore('favorites', () => {
   const favorites = ref<Film[]>([])
@@ -12,14 +20,18 @@ export const useFavoritesStore = defineStore('favorites', () => {
     isLoading.value = true
     error.value = null
     try {
-      console.log('Fetching favorites...')
+      // GET /favorites - возвращает массив фильмов
       const response = await api.get('/favorites')
-      console.log('Favorites response:', response.data)
-      favorites.value = response.data
+      
+      const data = response.data as any
+      if (Array.isArray(data)) {
+        favorites.value = data
+      } else {
+        favorites.value = []
+      }
     } catch (err: any) {
-      console.error('Failed to fetch favorites:', err)
       error.value = err.response?.data?.message || 'Ошибка загрузки избранного'
-      throw err
+      favorites.value = []
     } finally {
       isLoading.value = false
     }
@@ -29,13 +41,14 @@ export const useFavoritesStore = defineStore('favorites', () => {
     isLoading.value = true
     error.value = null
     try {
-      console.log('Adding to favorites, filmId:', filmId)
-      const response = await api.post('/favorites', { filmId })
-      console.log('Add to favorites response:', response.data)
-      // После успешного добавления обновляем список
+      // API принимает x-www-form-urlencoded с полем id (строка!)
+      const formData = toFormData({ id: String(filmId) })
+      await api.post('/favorites', formData, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      })
+      // Обновляем локальный список
       await fetchFavorites()
     } catch (err: any) {
-      console.error('Add to favorites error:', err)
       error.value = err.response?.data?.message || 'Ошибка добавления в избранное'
       throw err
     } finally {
@@ -47,8 +60,9 @@ export const useFavoritesStore = defineStore('favorites', () => {
     isLoading.value = true
     error.value = null
     try {
+      // DELETE /favorites/{movieId} - ID в URL path
       await api.delete(`/favorites/${filmId}`)
-      // После успешного удаления обновляем список
+      // Обновляем локальный список
       await fetchFavorites()
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Ошибка удаления из избранного'

@@ -44,9 +44,32 @@ const showTab = (tabIndex: number) => {
 
 const getInitials = () => {
   if (user.value?.firstName && user.value?.lastName) {
-    return `${user.value.firstName[0]}${user.value.lastName[0]}`
+    return `${user.value.firstName[0]}${user.value.lastName[0]}`.toUpperCase()
+  }
+  // Fallback: первые 2 буквы email
+  if (user.value?.email) {
+    const emailPart = user.value.email.split('@')[0] || ''
+    return emailPart.substring(0, 2).toUpperCase()
   }
   return '??'
+}
+
+const getUserFullName = () => {
+  if (user.value?.firstName || user.value?.lastName) {
+    return `${user.value.firstName || ''} ${user.value.lastName || ''}`.trim()
+  }
+  return '—'
+}
+
+// Состояние наведения для карточек фильмов
+const hoveredFilmId = ref<number | null>(null)
+
+const handleFilmHover = (filmId: number) => {
+  hoveredFilmId.value = filmId
+}
+
+const handleFilmLeave = () => {
+  hoveredFilmId.value = null
 }
 </script>
 
@@ -96,8 +119,19 @@ const getInitials = () => {
               </div>
               <ul v-else class="account__film-list">
                 <li v-for="film in favoritesStore.favorites" :key="film.id" class="account__film-item">
-                  <a class="film-card account__film-card" :href="`/film/${film.id}`">
-                    <button type="button" class="account__film-delete" aria-label="Удалить из избранного" @click.prevent="handleDeleteFromFavorites(film.id)">
+                  <a 
+                    class="film-card account__film-card" 
+                    :href="`/film/${film.id}`"
+                    @mouseenter="handleFilmHover(film.id)"
+                    @mouseleave="handleFilmLeave"
+                  >
+                    <button 
+                      type="button" 
+                      class="account__film-delete" 
+                      :class="{ 'account__film-delete--active': hoveredFilmId === film.id }"
+                      aria-label="Удалить из избранного" 
+                      @click.prevent="handleDeleteFromFavorites(film.id)"
+                    >
                       <svg width="13" height="13" class="account__film-delete-icon" aria-hidden="true">
                         <use xlink:href="/images/sprite.svg#icon-close-black"></use>
                       </svg>
@@ -124,7 +158,7 @@ const getInitials = () => {
                       Имя Фамилия
                     </span>
                     <span class="account__user-list-data" id="userName">
-                      {{ user?.firstName }} {{ user?.lastName }}
+                      {{ getUserFullName() }}
                     </span> 
                   </div>
                 </li>

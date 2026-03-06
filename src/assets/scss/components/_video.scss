@@ -3,6 +3,38 @@
 .plyr__video-embed {
     width: 960px;
     height: 540px;
+    
+    @media (max-width: 1024px) {
+      width: 100%;
+      height: 400px;
+    }
+    
+    @media (max-width: 640px) {
+      width: 100%;
+      height: 250px;
+    }
+}
+
+.plyr-player {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  
+  .plyr {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .plyr__video-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+  
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
 }
 
 .plyr__video-embed iframe {

@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFilmsStore } from '@/stores/films'
 import { useUserStore } from '@/stores/user'
 import { useFavoritesStore } from '@/stores/favorites'
+import Plyr from 'plyr'
+import 'plyr/dist/plyr.css'
 
 const route = useRoute()
 const filmsStore = useFilmsStore()
@@ -12,6 +14,7 @@ const favoritesStore = useFavoritesStore()
 
 const filmId = computed(() => parseInt(route.params.id as string))
 const isTrailerModalOpen = ref(false)
+let player: Plyr | null = null
 
 onMounted(() => {
   filmsStore.fetchFilmById(filmId.value)
@@ -24,12 +27,11 @@ const isFavorite = computed(() => {
 const favoriteError = ref<string | null>(null)
 
 const handleFavoriteClick = async () => {
-  console.log('handleFavoriteClick called')
-  console.log('isAuthenticated:', userStore.isAuthenticated)
-  console.log('user:', userStore.user)
+  if (!userStore.isInitialized) {
+    return
+  }
   
   if (!userStore.isAuthenticated) {
-    console.log('Not authenticated, opening modal')
     // Открываем модальное окно авторизации
     if (window.openAuthModal) {
       window.openAuthModal()
@@ -39,22 +41,67 @@ const handleFavoriteClick = async () => {
   
   favoriteError.value = null
   try {
-    console.log('Toggling favorite for film:', filmId.value)
     await favoritesStore.toggleFavorite(filmId.value)
-    console.log('Toggle successful')
   } catch (error: any) {
-    console.error('Ошибка при работе с избранным:', error)
     favoriteError.value = error?.response?.data?.message || 'Не удалось добавить в избранное'
   }
 }
 
-const openTrailer = () => {
+const videoElement = ref<HTMLVideoElement | null>(null)
+
+const openTrailer = async () => {
+  const trailerUrl = filmsStore.currentFilm?.trailerUrl
+  if (!trailerUrl) return
+  
   isTrailerModalOpen.value = true
+  
+  // Небольшая задержка для рендера DOM
+  await new Promise(resolve => setTimeout(resolve, 100))
+  await nextTick()
+  
+  // Извлекаем video ID
+  let videoId = ''
+  if (trailerUrl.includes('youtube.com/embed/')) {
+    videoId = trailerUrl.split('youtube.com/embed/')[1]?.split('?')[0] || ''
+  } else if (trailerUrl.includes('youtube.com/watch')) {
+    const url = new URL(trailerUrl)
+    videoId = url.searchParams.get('v') || ''
+  } else if (trailerUrl.includes('youtu.be/')) {
+    videoId = trailerUrl.split('youtu.be/')[1]?.split('?')[0] || ''
+  }
+  
+  if (videoId && videoElement.value) {
+    player = new Plyr(videoElement.value, {
+      autoplay: true,
+      controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen', 'pip']
+    })
+    
+    player.source = {
+      type: 'video',
+      sources: [
+        {
+          src: videoId,
+          provider: 'youtube'
+        }
+      ]
+    }
+  }
 }
 
 const closeTrailer = () => {
   isTrailerModalOpen.value = false
+  // Очищаем плеер
+  if (player) {
+    player.destroy()
+    player = null
+  }
 }
+
+onUnmounted(() => {
+  if (player) {
+    player.destroy()
+  }
+})
 </script>
 
 <template>
@@ -178,23 +225,18 @@ const closeTrailer = () => {
       </div>
     </div>
     
-    <!-- Модальное окно трейлера -->
-    <div v-if="isTrailerModalOpen" class="modal modal--active">
+    <!-- Модальное окно трейлера с Plyr -->
+    <div v-if="isTrailerModalOpen" class="modal modal--active" @click.self="closeTrailer">
       <div class="preview">
-        <button type="button" class="modal__close" id="previewClose" @click="closeTrailer">
+        <button type="button" class="modal__close" @click="closeTrailer">
           <svg class="modal__close-icon" aria-hidden="true" width="13" height="13">
             <use xlink:href="/images/sprite.svg#icon-close-black"></use>
           </svg>
         </button>
-        <div class="plyr__video-embed" id="player" :data-url="filmsStore.currentFilm?.trailerUrl">
-          <iframe
-            id="videoFrame"
-            :src="filmsStore.currentFilm?.trailerUrl"
-            allowfullscreen
-            allowtransparency
-            allow="autoplay"
-            title="YouTube video player">
-          </iframe>
+        <div class="plyr__video-embed plyr-player">
+          <video ref="videoElement" class="plyr-video" playsinline controls crossorigin="anonymous">
+            <source :src="filmsStore.currentFilm?.trailerUrl" type="video/youtube">
+          </video>
         </div>
       </div>
     </div>

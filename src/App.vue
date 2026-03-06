@@ -30,11 +30,8 @@ const handleAuthSuccess = async () => {
 onMounted(async () => {
   try {
     await userStore.fetchCurrentUser()
-    console.log('User loaded:', userStore.user)
-    console.log('Is authenticated:', userStore.isAuthenticated)
     if (userStore.isAuthenticated) {
       await favoritesStore.fetchFavorites()
-      console.log('Favorites loaded:', favoritesStore.favorites.length)
     }
   } catch (error) {
     console.error('Ошибка при проверке авторизации:', error)
