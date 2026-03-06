@@ -2,18 +2,12 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useFilmsStore } from '@/stores/films'
-import { useRouter } from 'vue-router'
 
 const filmsStore = useFilmsStore()
-const router = useRouter()
 
 onMounted(() => {
   filmsStore.fetchTopFilms(10)
 })
-
-const navigateToFilm = (filmId: number) => {
-  router.push({ name: 'film', params: { id: filmId } })
-}
 </script>
 <template>
   <section class="top-10">
@@ -31,32 +25,13 @@ const navigateToFilm = (filmId: number) => {
       </div>
       
       <ol v-else class="top-10__list">
-        <li 
-          v-for="(film, index) in filmsStore.topFilms" 
-          :key="film.id"
-          class="top-10__item"
-          @click="navigateToFilm(film.id)"
-        >
-          <div class="card top-10__card">
-            
-            <div class="top-10__item-poster">
-              <img 
-                :src="film.posterUrl" 
-                :alt="film.title"
-                class="card__image"
-              />
-            </div>
-            
-            <div class="top-10__item-info">
-              <h3 class="visually-hidden">
-                {{ film.title }}
-              </h3>
-              
-             
-              
-              
-            </div>
-          </div>
+        <li v-for="film in filmsStore.topFilms" :key="film.id" class="top-10__item">
+          <a :href="`/film/${film.id}`" class="card top-10__card">
+            <h3 class="visually-hidden">
+              {{ film.title }}
+            </h3>
+            <img :src="film.posterUrl" :alt="`Постер фильма ${film.title}`" class="card__image">
+          </a>
         </li>
       </ol>
     </div>

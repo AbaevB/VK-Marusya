@@ -54,8 +54,10 @@ export const useUserStore = defineStore('user', () => {
   const fetchCurrentUser = async () => {
     try {
       const response = await authApi.getCurrentUser()
+      console.log('Profile response:', response.data)
       user.value = response.data
     } catch (err: any) {
+      console.error('Failed to fetch current user:', err)
       user.value = null
     }
   }

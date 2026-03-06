@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useFavoritesStore } from '@/stores/favorites'
@@ -10,6 +10,7 @@ const userStore = useUserStore()
 const favoritesStore = useFavoritesStore()
 
 const user = computed(() => userStore.user)
+const activeTab = ref(0)
 
 onMounted(async () => {
   if (!userStore.isAuthenticated) {
@@ -28,70 +29,129 @@ const handleLogout = async () => {
     console.error('Ошибка при выходе:', error)
   }
 }
+
+const handleDeleteFromFavorites = async (filmId: number) => {
+  try {
+    await favoritesStore.removeFromFavorites(filmId)
+  } catch (error) {
+    console.error('Ошибка удаления из избранного:', error)
+  }
+}
+
+const showTab = (tabIndex: number) => {
+  activeTab.value = tabIndex
+}
+
+const getInitials = () => {
+  if (user.value?.firstName && user.value?.lastName) {
+    return `${user.value.firstName[0]}${user.value.lastName[0]}`
+  }
+  return '??'
+}
 </script>
 
 <template>
-  <main class="account-page">
+  <section class="account" v-if="userStore.isAuthenticated">
     <div class="container">
-      <div v-if="!userStore.isAuthenticated" class="not-authorized">
-        <h1>Доступ запрещён</h1>
-        <p>Для просмотра этой страницы необходимо авторизоваться.</p>
-        <button @click="router.push({ name: 'home' })" class="account-page__home-btn">
-          На главную
-        </button>
-      </div>
-      
-      <div v-else class="account-content">
-        <div class="account-header">
-          <h1 class="account-header__title">Личный кабинет</h1>
-          <button @click="handleLogout" class="account-header__logout-btn">
-            Выйти
-          </button>
-        </div>
-        
-        <div class="account-info">
-          <h2 class="account-info__title">Информация о пользователе</h2>
-          <div class="account-info__grid">
-            <div class="account-info__item">
-              <span class="account-info__label">Имя:</span>
-              <span class="account-info__value">{{ user?.firstName }}</span>
+      <div class="account__wrapper">
+        <h1 class="account__title">
+          Мой аккаунт
+        </h1>
+        <div class="account__tab" id="accountTab">
+          <div class="account__tab-nav">
+            <button 
+              class="account__tab-btn" 
+              :class="{ 'account__tab-btn--active': activeTab === 0 }"
+              data-target-id="0"
+              @click="showTab(0)"
+            >
+              <svg class="account__tab-icon" aria-hidden="true" width="24" height="24">
+                <use xlink:href="/images/sprite.svg#icon-heart-solid"></use>
+              </svg> 
+              <span class="account__tab-btn-text">
+                Избранные фильмы
+              </span>
+            </button>
+            <button 
+              class="account__tab-btn" 
+              :class="{ 'account__tab-btn--active': activeTab === 1 }"
+              data-target-id="1"
+              @click="showTab(1)"
+            >
+              <svg class="account__tab-icon" aria-hidden="true" width="24" height="24">
+                <use xlink:href="/images/sprite.svg#icon-user-solid"></use>
+              </svg> 
+              <span class="account__tab-btn-text">
+                Настройка аккаунта
+              </span>
+            </button>
+          </div>
+          <div class="account__tab-content">
+            <div class="account__tab-pane" :class="{ 'account__tab-pane--active': activeTab === 0 }" data-id="0">
+              <div v-if="favoritesStore.isLoading && favoritesStore.favorites.length === 0" class="loading">
+                Загрузка избранных фильмов...
+              </div>
+              <div v-else-if="favoritesStore.error" class="error">
+                {{ favoritesStore.error }}
+              </div>
+              <ul v-else class="account__film-list">
+                <li v-for="film in favoritesStore.favorites" :key="film.id" class="account__film-item">
+                  <a class="film-card account__film-card" :href="`/film/${film.id}`">
+                    <button type="button" class="account__film-delete" aria-label="Удалить из избранного" @click.prevent="handleDeleteFromFavorites(film.id)">
+                      <svg width="13" height="13" class="account__film-delete-icon" aria-hidden="true">
+                        <use xlink:href="/images/sprite.svg#icon-close-black"></use>
+                      </svg>
+                    </button>
+                    <h3 class="visually-hidden">
+                      {{ film.title }}
+                    </h3>
+                    <img class="film-card__image" :src="film.posterUrl" :alt="`Постер фильма ${film.title}`">
+                  </a> 
+                </li>
+              </ul>
             </div>
-            <div class="account-info__item">
-              <span class="account-info__label">Фамилия:</span>
-              <span class="account-info__value">{{ user?.lastName }}</span>
+            <div class="account__tab-pane" :class="{ 'account__tab-pane--active': activeTab === 1 }" data-id="1">
+              <h2 class="visually-hidden">
+                Настройки аккаунта
+              </h2>
+              <ul class="account__user-list">
+                <li class="account__user-item">
+                  <div class="account__user-list-marker" id="userMarker">
+                    {{ getInitials() }}
+                  </div>
+                  <div class="account__user-list-content">
+                    <span class="account__user-list-title">
+                      Имя Фамилия
+                    </span>
+                    <span class="account__user-list-data" id="userName">
+                      {{ user?.firstName }} {{ user?.lastName }}
+                    </span> 
+                  </div>
+                </li>
+                <li class="account__user-item">
+                  <div class="account__user-list-marker">
+                    <svg class="account__user-list-icon" aria-hidden="true" width="24" height="24">
+                      <use xlink:href="/images/sprite.svg#icon-email"></use>
+                    </svg>
+                  </div>
+                  <div class="account__user-list-content">
+                    <span class="account__user-list-title">
+                      Электронная почта
+                    </span>
+                    <span class="account__user-list-data" id="userEmail">
+                      {{ user?.email }}
+                    </span> 
+                  </div>
+                </li>
+              </ul>
+              <button class="btn btn-primary account__logout" id="logout" type="button" @click="handleLogout">
+                Выйти из аккаунта 
+              </button>
             </div>
-            <div class="account-info__item">
-              <span class="account-info__label">Email:</span>
-              <span class="account-info__value">{{ user?.email }}</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="account-favorites">
-          <h2 class="account-favorites__title">Избранные фильмы</h2>
-          
-          <div v-if="favoritesStore.isLoading && favoritesStore.favorites.length === 0" class="loading">
-            Загрузка избранных фильмов...
-          </div>
-          
-          <div v-else-if="favoritesStore.error" class="error">
-            {{ favoritesStore.error }}
-          </div>
-          
-          <div v-else-if="favoritesStore.favorites.length === 0" class="empty-favorites">
-            <p>У вас пока нет избранных фильмов.</p>
-          </div>
-          
-          <div v-else class="favorites-grid">
-            <FilmCard
-              v-for="film in favoritesStore.favorites"
-              :key="film.id"
-              :film="film"
-            />
           </div>
         </div>
       </div>
     </div>
-  </main>
+  </section>
 </template>
 

@@ -112,12 +112,12 @@ const handleAuthSuccess = () => {
           </li>
         </ul>
       
-        <button class="header__btn" type="button" @click="handleAccountClick">
-          <svg width="24" height="24" class="header__btn-icon" aria-hidden="true">
+        <button class="header__bth" type="button" @click="handleAccountClick">
+          <svg width="24" height="24" class="header__bth-icon" aria-hidden="true">
             <use xlink:href="/images/sprite.svg#icon-user"></use>
           </svg>
-          <span class="header__btn-text">
-            {{ isAuthenticated ? userName : 'Войти' }}
+          <span class="header__bth-text">
+            {{ isAuthenticated ? 'Аккаунт' : 'Войти' }}
           </span>
         </button>
       </div>

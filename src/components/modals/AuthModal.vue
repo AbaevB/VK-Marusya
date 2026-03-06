@@ -17,6 +17,7 @@ const emit = defineEmits<Emits>()
 
 const userStore = useUserStore()
 const isLoginForm = ref(true)
+const showSuccess = ref(false)
 
 const loginData = ref<LoginData>({
   email: '',
@@ -104,13 +105,19 @@ const handleRegister = async () => {
 
   try {
     await userStore.register(registerData.value)
-    emit('success')
-    emit('close')
-    registerData.value = { email: '', password: '', firstName: '', lastName: '' }
-    errors.value = {}
+    showSuccess.value = true
   } catch (error) {
     console.error('Ошибка регистрации:', error)
   }
+}
+
+const handleSuccessLogin = () => {
+  showSuccess.value = false
+  isLoginForm.value = true
+  registerData.value = { email: '', password: '', firstName: '', lastName: '' }
+  errors.value = {}
+  emit('success')
+  emit('close')
 }
 
 const toggleForm = () => {
@@ -118,143 +125,135 @@ const toggleForm = () => {
   errors.value = {}
 }
 
-const handleOverlayClick = (event: MouseEvent) => {
-  if ((event.target as HTMLElement).classList.contains('auth-modal__overlay')) {
-    emit('close')
-  }
+const closeModal = () => {
+  showSuccess.value = false
+  emit('close')
 }
-
-const title = computed(() => isLoginForm.value ? 'Вход в аккаунт' : 'Регистрация')
-const submitButtonText = computed(() => isLoginForm.value ? 'Войти' : 'Зарегистрироваться')
-const toggleButtonText = computed(() => isLoginForm.value ? 'Создать аккаунт' : 'Уже есть аккаунт?')
 </script>
 
 <template>
-  <div 
-    v-if="isOpen" 
-    class="auth-modal"
-    @click="handleOverlayClick"
-  >
-    <div class="auth-modal__overlay"></div>
-    <div class="auth-modal__content">
-      <button class="auth-modal__close" @click="$emit('close')">×</button>
-      
-      <h2 class="auth-modal__title">{{ title }}</h2>
-      
+  <div v-if="isOpen" class="modal modal--active" id="loginModal">
+    <div class="login">
+      <!-- Форма входа -->
       <form 
-        v-if="isLoginForm" 
+        v-if="isLoginForm && !showSuccess" 
+        class="form form--active login-form" 
+        id="loginForm" 
+        action="#" 
+        method="get"
         @submit.prevent="handleLogin" 
-        class="auth-modal__form"
       >
-        <div class="auth-modal__field">
-          <label for="login-email" class="auth-modal__label">Email</label>
-          <input
-            id="login-email"
-            v-model="loginData.email"
-            type="email"
-            class="auth-modal__input"
-            :class="{ 'auth-modal__input--error': errors.email }"
-            placeholder="example@mail.com"
-          />
-          <span v-if="errors.email" class="auth-modal__error">{{ errors.email }}</span>
+        <button class="modal__close" id="loginClose" aria-label="выход" type="button" @click="closeModal">
+          <svg class="modal__close-icon" aria-hidden="true" width="13" height="13">
+            <use xlink:href="/images/sprite.svg#icon-close-black"></use>
+          </svg>
+        </button>
+        <img class="form__logo" src="/images/logo-light.png" alt="Маруся лого"> 
+        <fieldset class="form__fields">
+          <label class="form__label" for="email">
+            <svg class="form__icon" aria-hidden="true" width="24" height="24">
+              <use xlink:href="/images/sprite.svg#icon-email"></use>
+            </svg>
+            <input class="form__field" id="email" type="email" name="email" placeholder="Электронная почта" v-model="loginData.email">
+          </label>
+          <label class="form__label" for="password">
+            <svg class="form__icon" aria-hidden="true" width="24" height="24">
+              <use xlink:href="/images/sprite.svg#icon-key"></use>
+            </svg>
+            <input class="form__field" id="password" type="password" name="password" placeholder="Пароль" v-model="loginData.password">
+          </label>
+        </fieldset>
+        <div class="form__buttons">
+          <button class="btn btn-primary form__submit-btn" type="submit">
+            Войти
+          </button>
         </div>
-        
-        <div class="auth-modal__field">
-          <label for="login-password" class="auth-modal__label">Пароль</label>
-          <input
-            id="login-password"
-            v-model="loginData.password"
-            type="password"
-            class="auth-modal__input"
-            :class="{ 'auth-modal__input--error': errors.password }"
-            placeholder="Введите пароль"
-          />
-          <span v-if="errors.password" class="auth-modal__error">{{ errors.password }}</span>
-        </div>
-        
-        <button 
-          type="submit" 
-          class="auth-modal__submit"
-          :disabled="userStore.isLoading"
-        >
-          {{ userStore.isLoading ? 'Загрузка...' : submitButtonText }}
+        <button class="btn form__toggle-btn" type="button" @click="toggleForm">
+          Регистрация
         </button>
       </form>
       
+      <!-- Форма регистрации -->
       <form 
-        v-else 
-        @submit.prevent="handleRegister" 
-        class="auth-modal__form"
+        v-if="!isLoginForm && !showSuccess" 
+        class="form register-form form--active" 
+        id="registerForm" 
+        action="#" 
+        method="get"
+        @submit.prevent="handleRegister"
       >
-        <div class="auth-modal__field">
-          <label for="register-firstName" class="auth-modal__label">Имя</label>
-          <input
-            id="register-firstName"
-            v-model="registerData.firstName"
-            type="text"
-            class="auth-modal__input"
-            :class="{ 'auth-modal__input--error': errors.firstName }"
-            placeholder="Иван"
-          />
-          <span v-if="errors.firstName" class="auth-modal__error">{{ errors.firstName }}</span>
-        </div>
-        
-        <div class="auth-modal__field">
-          <label for="register-lastName" class="auth-modal__label">Фамилия</label>
-          <input
-            id="register-lastName"
-            v-model="registerData.lastName"
-            type="text"
-            class="auth-modal__input"
-            :class="{ 'auth-modal__input--error': errors.lastName }"
-            placeholder="Иванов"
-          />
-          <span v-if="errors.lastName" class="auth-modal__error">{{ errors.lastName }}</span>
-        </div>
-        
-        <div class="auth-modal__field">
-          <label for="register-email" class="auth-modal__label">Email</label>
-          <input
-            id="register-email"
-            v.model="registerData.email"
-            type="email"
-            class="auth-modal__input"
-            :class="{ 'auth-modal__input--error': errors.email }"
-            placeholder="example@mail.com"
-          />
-          <span v-if="errors.email" class="auth-modal__error">{{ errors.email }}</span>
-        </div>
-        
-        <div class="auth-modal__field">
-          <label for="register-password" class="auth-modal__label">Пароль</label>
-          <input
-            id="register-password"
-            v-model="registerData.password"
-            type="password"
-            class="auth-modal__input"
-            :class="{ 'auth-modal__input--error': errors.password }"
-            placeholder="Не менее 6 символов"
-          />
-          <span v-if="errors.password" class="auth-modal__error">{{ errors.password }}</span>
-        </div>
-        
-        <button 
-          type="submit" 
-          class="auth-modal__submit"
-          :disabled="userStore.isLoading"
-        >
-          {{ userStore.isLoading ? 'Загрузка...' : submitButtonText }}
+        <button class="modal__close" id="registerClose" aria-label="выход" type="button" @click="closeModal">
+          <svg class="modal__close-icon" aria-hidden="true" width="13" height="13">
+            <use xlink:href="/images/sprite.svg#icon-close-black"></use>
+          </svg>
         </button>
+        <img class="form__logo" src="/images/logo-light.png" alt="Маруся лого">
+        <h2 class="form__title">
+          Регистрация
+        </h2>
+        <fieldset class="form__fields">
+          <label class="form__label" for="registerEmail">
+            <svg class="form__icon" aria-hidden="true" width="24" height="24">
+              <use xlink:href="/images/sprite.svg#icon-email"></use>
+            </svg>
+            <input class="form__field" id="registerEmail" type="email" name="email" placeholder="Электронная почта" v-model="registerData.email">
+          </label>
+
+          <label class="form__label" for="registerName">
+            <svg class="form__icon" aria-hidden="true" width="24" height="24">
+              <use xlink:href="/images/sprite.svg#icon-user-grey"></use>
+            </svg>
+            <input class="form__field" id="registerName" type="text" name="name" placeholder="Имя" v-model="registerData.firstName">
+          </label>
+
+          <label class="form__label" for="registerSurname">
+            <svg class="form__icon" aria-hidden="true" width="24" height="24">
+              <use xlink:href="/images/sprite.svg#icon-user-grey"></use>
+            </svg>
+            <input class="form__field" id="registerSurname" type="text" name="surname" placeholder="Фамилия" v-model="registerData.lastName">
+          </label>
+
+          <label class="form__label" for="registerPassword">
+            <svg class="form__icon" aria-hidden="true" width="24" height="24">
+              <use xlink:href="/images/sprite.svg#icon-key"></use>
+            </svg>
+            <input class="form__field" id="registerPassword" type="password" name="password" placeholder="Пароль" v-model="registerData.password">
+          </label>
+
+          <label class="form__label" for="repeatPassword">
+            <svg class="form__icon" aria-hidden="true" width="24" height="24">
+              <use xlink:href="/images/sprite.svg#icon-key"></use>
+            </svg>
+            <input class="form__field" id="repeatPassword" type="password" name="password" placeholder="Подтвердите пароль">
+          </label>
+        </fieldset>
+        <div class="form__buttons">
+          <button class="btn btn-primary form__submit-btn" type="submit">
+            Зарегистрироваться
+          </button>
+        </div>
+        <button class="btn form__toggle-btn" type="button" @click="toggleForm">
+          Войти
+        </button> 
       </form>
-      
-      <div class="auth-modal__footer">
-        <button type="button" class="auth-modal__toggle" @click="toggleForm">
-          {{ toggleButtonText }}
+
+      <!-- Успешная регистрация -->
+      <div v-if="showSuccess" class="login__success login__success--active">
+        <button class="modal__close" id="successClose" aria-label="выход" type="button" @click="closeModal">
+          <svg class="modal__close-icon" aria-hidden="true" width="13" height="13">
+            <use xlink:href="/images/sprite.svg#icon-close-black"></use>
+          </svg>
         </button>
-      </div>
-      
-      <div v-if="userStore.error" class="auth-modal__server-error">
-        {{ userStore.error }}
+        <img class="login__success-logo" src="/images/logo-light.png" alt="Маруся лого">
+        <h2 class="login__success-title">
+          Регистрация завершена
+        </h2>
+        <p class="login__success-text">
+          Используйте вашу электронную почту для входа  
+        </p>
+        <button class="btn btn-primary login__success-btn" type="button" @click="handleSuccessLogin">
+          Войти 
+        </button>
       </div>
     </div>
   </div>

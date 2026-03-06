@@ -12,9 +12,12 @@ export const useFavoritesStore = defineStore('favorites', () => {
     isLoading.value = true
     error.value = null
     try {
+      console.log('Fetching favorites...')
       const response = await api.get('/favorites')
+      console.log('Favorites response:', response.data)
       favorites.value = response.data
     } catch (err: any) {
+      console.error('Failed to fetch favorites:', err)
       error.value = err.response?.data?.message || 'Ошибка загрузки избранного'
       throw err
     } finally {
@@ -26,10 +29,13 @@ export const useFavoritesStore = defineStore('favorites', () => {
     isLoading.value = true
     error.value = null
     try {
-      await api.post('/favorites', { filmId })
+      console.log('Adding to favorites, filmId:', filmId)
+      const response = await api.post('/favorites', { filmId })
+      console.log('Add to favorites response:', response.data)
       // После успешного добавления обновляем список
       await fetchFavorites()
     } catch (err: any) {
+      console.error('Add to favorites error:', err)
       error.value = err.response?.data?.message || 'Ошибка добавления в избранное'
       throw err
     } finally {
