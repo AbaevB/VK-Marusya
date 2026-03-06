@@ -31,7 +31,7 @@
 
     &__content-top-item {
         span {
-            color: #fff;
+            color: $color-white;
             font-weight: 700;
             font-size: 18px;
             line-height: 24px;
@@ -93,8 +93,8 @@
 
     &__rating {
         padding: 4px 12px;
-        background-color: #308E21;
-        color: #fff;
+        background-color: $color-rating-green;
+        color: $color-white;
         font-weight: 700;
         font-size: 18px;
         line-height: 24px;

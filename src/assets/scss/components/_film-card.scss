@@ -4,9 +4,9 @@
     //max-height: 336px;
     height: 100%;
     border-radius: 16px;
-     border: 1px solid rgba(255, 255, 255, 0.25);
+     border: 1px solid $color-border-light;
      overflow: hidden;
-     box-shadow: 0px 0px 80px 0px rgba(255, 255, 255, 0.33);
+     box-shadow: 0px 0px 80px 0px $color-border-shadow;
 
     &__image    {
         width: 100%;
