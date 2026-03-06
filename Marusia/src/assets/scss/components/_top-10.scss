@@ -1,0 +1,89 @@
+.top-10 {
+    padding: 32px 0;
+
+    &__title {
+        margin: 0 0 64px;
+        font-weight: 700;
+        font-size: 40px;
+        line-height: 48px;
+
+        @include vp-576{
+            margin: 0 0 40px;
+            font-size: 24px;
+            line-height: 32px;
+        }
+    }
+
+    &__list {
+        @include listReset;
+        counter-reset: num;
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        column-gap: 40px;
+        row-gap: 64px;
+
+        @include vp-1400 {
+           grid-template-columns: repeat(4, 1fr);
+           padding: 0 20px;
+        }
+
+        
+        
+
+       
+
+        @include vp-1200 {
+         // Горизонтальная прокрутка на мобильных
+
+        display: flex;
+        padding: 34px 24px;
+        margin-right:  -20px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        //scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch; // Плавность на iOS
+
+        // Убираем gap, так как он не работает с overflow у flex
+        // Заменяем на margin между элементами
+        gap: 20px;
+
+        // Скрываем полосу прокрутки (опционально)
+        scrollbar-width: none; // Для Firefox
+        &::-webkit-scrollbar {
+            display: none; // Для WebKit (Chrome, Safari)
+        }
+    }
+    }
+
+    &__item {
+        position: relative;
+
+        &::after {
+            content: counter(num);
+            counter-increment: num;
+            display: block;
+            position: absolute;
+            top: -5%;
+            left: -10%;
+            padding: 8px 24px ;
+            font-weight: 700;
+            line-height: 28px;
+            background-color: #fff;
+            color: #6A5DC2;
+            text-align: center;
+            font-size: 24px;
+            border-radius: 16px;
+        }
+
+        @include vp-768{
+          width: 224px;  
+        }
+    }
+
+
+
+   
+
+    
+}

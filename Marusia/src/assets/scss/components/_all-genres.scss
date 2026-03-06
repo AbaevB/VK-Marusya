@@ -1,0 +1,43 @@
+.all-genres {
+   padding: 64px 0;
+
+   &__title {
+      margin: 0 0 64px;
+      font-weight: 700;
+      font-size: 48px;
+      line-height: 56px;
+
+      @include vp-576   {
+         margin: 0 0 40px;
+         font-size: 24px;
+         line-height: 32px;
+      }
+   }
+
+   &__list {
+      @include listReset;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      column-gap: 40px;
+      row-gap: 64px;
+
+       @media(max-width: 1200px) {
+         grid-template-columns: repeat(3, 1fr);
+      } 
+
+      @include vp-992 {
+         grid-template-columns: repeat(2, 1fr);
+         column-gap: 20px;
+         row-gap: 32px;
+      }
+
+      @include vp-576 {
+         display: flex;
+         flex-direction: column;
+      }
+   }
+
+
+
+
+}
