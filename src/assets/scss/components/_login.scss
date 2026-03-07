@@ -1,3 +1,5 @@
+@use "../base/variables";
+
 .login {
     position: absolute;
     top: 25%;
@@ -14,8 +16,8 @@
         flex-direction: column;
         align-items: center;
         //gap: 24px;
-        color: $color-black;
-        background-color: $color-white;
+        color: variables.$color-black;
+        background-color: variables.$color-white;
         border-radius: 16px;
 
        &-logo   {

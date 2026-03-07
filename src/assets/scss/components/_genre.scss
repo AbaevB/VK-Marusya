@@ -1,3 +1,6 @@
+@use "../base/mixins";
+@use "../base/variables";
+
 .genre  {
     padding: 64px 0;
 
@@ -7,9 +10,9 @@
       font-weight: 700;
       font-size: 48px;
       line-height: 56px;
-      color: $color-white;
+      color: variables.$color-white;
 
-      @include vp-576{
+      @include mixins.vp-576{
         margin: 0 0 40px;
         font-size: 24px;
         line-height: 32px;
@@ -17,28 +20,28 @@
     }
 
     &__list {
-        @include listReset;
+        @include mixins.listReset;
         margin: 0 0 64px;
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         column-gap: 40px;
         row-gap: 64px;
 
-        @include vp-1400{
+        @include mixins.vp-1400{
            grid-template-columns: repeat(4, 1fr);
            //column-gap: 20px; 
         }
 
-        @include vp-1200    {
+        @include mixins.vp-1200    {
            grid-template-columns: repeat(3, 1fr); 
         }
 
-        @include vp-992 {
+        @include mixins.vp-992 {
            grid-template-columns: repeat(2, 1fr); 
         }
 
 
-        @include vp-576 {
+        @include mixins.vp-576 {
             display: flex;
             flex-direction: column;
             gap: 64px;

@@ -1,3 +1,6 @@
+@use "../base/mixins";
+@use "../base/variables";
+
 html {
   box-sizing: border-box;
 }
@@ -11,9 +14,9 @@ html {
 body {
  font-family: "Play", sans-serif;
   position: relative;
-  color: $color-white;
-  background: linear-gradient(180deg, $color-gradient-blue 0%, $color-gradient-purple 100%),
-    linear-gradient(178.73deg, $color-black -17.53%, $color-gradient-dark 131.74%);
+  color: variables.$color-white;
+  background: linear-gradient(180deg, variables.$color-gradient-blue 0%, variables.$color-gradient-purple 100%),
+    linear-gradient(178.73deg, variables.$color-black -17.53%, variables.$color-gradient-dark 131.74%);
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100vh;
@@ -71,9 +74,9 @@ ul {
   position: absolute;
   top: 0;
   left: 23px;
-  @include fontPul1();
+  @include mixins.fontPul1();
   font-weight: 400;
   font-size: 9px;
   line-height: 11px;
-  color: $color-red;
+  color: variables.$color-red;
 }

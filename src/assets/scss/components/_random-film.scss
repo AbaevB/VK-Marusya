@@ -1,3 +1,6 @@
+@use "../base/mixins";
+@use "../base/variables";
+
 .random-film {
     padding: 32px 0;
 
@@ -6,7 +9,7 @@
         align-items: center;
         gap: 50px;
 
-        @include vp-1200{
+        @include mixins.vp-1200{
             flex-direction: column-reverse;
         }
 
@@ -22,7 +25,7 @@
     }
 
     &__content-top {
-        @include listReset;
+        @include mixins.listReset;
         display: flex;
         align-items: center;
         gap: 16px;
@@ -31,7 +34,7 @@
 
     &__content-top-item {
         span {
-            color: $color-white;
+            color: variables.$color-white;
             font-weight: 700;
             font-size: 18px;
             line-height: 24px;
@@ -51,7 +54,7 @@
         gap: 16px;
         flex-wrap: wrap;
 
-        @include vp-768 {
+        @include mixins.vp-768 {
             gap: 8px;
         }
         
@@ -61,7 +64,7 @@
         border-radius: 28px;
 
         &--trailer {
-            @include vp-768 {
+            @include mixins.vp-768 {
                 width: 100%;
             }
         }
@@ -74,7 +77,7 @@
         line-height: 56px;
         letter-spacing: 0;
 
-        @include vp-576{
+        @include mixins.vp-576{
           font-size: 24px;
           line-height: 32px;  
         }
@@ -85,7 +88,7 @@
        font-size: 24px;
        line-height: 32px;
        
-       @include vp-576{
+       @include mixins.vp-576{
         font-size: 18px;
         line-height: 24px;
        }
@@ -93,8 +96,8 @@
 
     &__rating {
         padding: 4px 12px;
-        background-color: $color-rating-green;
-        color: $color-white;
+        background-color: variables.$color-rating-green;
+        color: variables.$color-white;
         font-weight: 700;
         font-size: 18px;
         line-height: 24px;
@@ -107,7 +110,7 @@
         border-radius: 16px;
         overflow: hidden;
 
-        @include vp-1200 {
+        @include mixins.vp-1200 {
             max-width: unset;
             width: 100%;
         }

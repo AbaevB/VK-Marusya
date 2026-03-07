@@ -1,3 +1,6 @@
+@use "../base/mixins";
+@use "../base/variables";
+
 .btn {
 
     background-color: transparent;
@@ -14,29 +17,29 @@
         font-weight: 700;
         font-size: 18px;
         line-height: 24px;
-        color: $color-white;
-        background-color: $color-primary;
-        border-color: $color-primary;
+        color: variables.$color-white;
+        background-color: variables.$color-primary;
+        border-color: variables.$color-primary;
         //background-color: $color-primary-hover;
         text-align: center;
-        border: 1px solid $color-primary;;
+        border: 1px solid variables.$color-primary;;
         border-radius: 16px;
         transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out;
 
         &:hover {
-            background-color: $color-primary-hover;
-            border-color: $color-border-dark;
+            background-color: variables.$color-primary-hover;
+            border-color: variables.$color-border-dark;
         }
 
         &:focus-visible {
-            background-color: $color-primary-hover;
-            border-color: $color-border-dark;
+            background-color: variables.$color-primary-hover;
+            border-color: variables.$color-border-dark;
         }
 
         &--icon {
             padding: 16px 22px;
 
-            @include vp-768{
+            @include mixins.vp-768{
                 padding: 16px 18px;
             }
 

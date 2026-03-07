@@ -1,3 +1,5 @@
+@use "variables";
+
 // src/assets/scss/base/_mixins.scss
 
 @mixin font-face($name, $file, $weight: 400, $style: normal) {
@@ -98,39 +100,39 @@
 // Breakpoints
 
  @mixin vp-375 {
-	@media(max-width: $vp-xs){
+	@media(max-width: variables.$vp-xs){
 		@content;
 	}
  }
 
  @mixin vp-576 {
-	@media(max-width: $vp-sm){
+	@media(max-width: variables.$vp-sm){
 		@content;
 	}
  }
 
 
  @mixin vp-768 {
-	@media(max-width: $vp-md){
+	@media(max-width: variables.$vp-md){
 		@content;
 	}
  }
 
  @mixin vp-992 {
-	@media(max-width: $vp-lg){
+	@media(max-width: variables.$vp-lg){
 		@content;
 	}
  }
 
   @mixin vp-1200 {
-	@media(max-width: $vp-xl){
+	@media(max-width: variables.$vp-xl){
 		@content;
 	}
  }
 
 
  @mixin vp-1400 {
-	@media(max-width: $vp-xxl){
+	@media(max-width: variables.$vp-xxl){
 		@content;
 	}
  }

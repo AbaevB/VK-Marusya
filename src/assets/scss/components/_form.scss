@@ -1,3 +1,6 @@
+@use "../base/mixins";
+@use "../base/variables";
+
 .form {
     display: none;
     //position: absolute;
@@ -13,8 +16,8 @@
     align-items: center;
 
     gap: 24px;
-    color: $color-black;
-    background-color: $color-white;
+    color: variables.$color-black;
+    background-color: variables.$color-white;
     border-radius: 16px;
     //transform: translateY(-50%);
     
@@ -31,7 +34,7 @@
     border-radius: 100%;
     cursor: pointer;
 
-    @include vp-576 {
+    @include mixins.vp-576 {
       top: 20px;
       right: 20px;
     }
@@ -53,7 +56,7 @@
   &__label  {
     width: 100%;
     position: relative;
-    color: $color-border-dark;
+    color: variables.$color-border-dark;
   }
 
   &__icon{
@@ -68,7 +71,7 @@
     padding-left: 52px;
     height: 56px;
     border-radius: 16px;
-    border: 1px solid $color-border-dark;
+    border: 1px solid variables.$color-border-dark;
   }
 
   &__buttons    {
@@ -85,7 +88,7 @@
   &__toggle-btn {
     font-weight: 700;
     font-size: 18px;
-    color: $color-black;
+    color: variables.$color-black;
     line-height: 24px;
   }
 
@@ -93,7 +96,7 @@
     display: flex;
   }
 
-  @include vp-576 {
+  @include mixins.vp-576 {
     top: 15%;
     max-width: 355px;
   }
@@ -104,7 +107,7 @@
 .register-form  {
   top: 15%;
 
-  @include vp-576 {
+  @include mixins.vp-576 {
     top: 10%;
     max-width: 355px;
   }
