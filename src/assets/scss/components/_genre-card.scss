@@ -1,3 +1,5 @@
+@use "../base/variables";
+
 .genre-card {
     display: flex;
     flex-direction: column;
@@ -21,13 +23,13 @@
         text-align: center;
         padding-top: 22px;
         padding-bottom: 30px;
-        background-color: $color-black;
+        background-color: variables.$color-black;
     }
 
     &__text {
         font-weight: 700;
         font-size: 24px;
         line-height: 32px;
-        color: $color-white;
+        color: variables.$color-white;
     }
 }

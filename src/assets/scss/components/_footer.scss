@@ -1,10 +1,12 @@
+@use "../base/mixins";
+
 .footer{
     padding: 42px 0;
     &__container    {
         display: flex;
         justify-content: flex-end;
 
-        @include vp-768 {
+        @include mixins.vp-768 {
             justify-content: flex-start;
         }
     }

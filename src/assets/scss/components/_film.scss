@@ -1,3 +1,6 @@
+@use "../base/mixins";
+@use "../base/variables";
+
 .film {
     padding: 32px 0;
 
@@ -6,7 +9,7 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 40px;
 
-        @include vp-992 {
+        @include mixins.vp-992 {
             display: flex;
             flex-direction: column;
         }
@@ -25,25 +28,25 @@
             span {}
         }
 
-        @include vp-992 {
+        @include mixins.vp-992 {
             order: 2;
         }
     }
 
     &__image-wrapper {
-        @include vp-992 {
+        @include mixins.vp-992 {
             order: 1;
         }
     }
 
     &__info {
-        @include vp-992 {
+        @include mixins.vp-992 {
             order: 3;
         }
     }
 
     &__content-top {
-        @include listReset;
+        @include mixins.listReset;
         display: flex;
         align-items: center;
         gap: 16px;
@@ -64,8 +67,8 @@
 
     &__rating {
         padding: 4px 12px;
-        background-color: $color-rating-green;
-        color: $color-white;
+        background-color: variables.$color-rating-green;
+        color: variables.$color-white;
         font-weight: 700;
         font-size: 18px;
         line-height: 24px;
@@ -77,9 +80,9 @@
         font-weight: 700;
         font-size: 48px;
         line-height: 56px;
-        color: $color-white;
+        color: variables.$color-white;
 
-        @include vp-576 {
+        @include mixins.vp-576 {
             margin: 0 0 12px;
             font-size: 24px;
             line-height: 32px;
@@ -91,9 +94,9 @@
         font-weight: 400;
         font-size: 24px;
         line-height: 32px;
-        color: $color-white;
+        color: variables.$color-white;
 
-        @include vp-576 {
+        @include mixins.vp-576 {
             font-size: 18px;
             line-height: 24px;
         }
@@ -118,7 +121,7 @@
     }
 
     &__info-list {
-        @include listReset;
+        @include mixins.listReset;
     }
 
     &__info-title {
@@ -127,7 +130,7 @@
         font-size: 40px;
         line-height: 48px;
 
-        @include vp-576 {
+        @include mixins.vp-576 {
             margin: 0 0 40px;
             font-size: 24px;
             line-height: 32px;
@@ -140,7 +143,7 @@
         margin: 5px 0;
 
         &:not(:last-child) {
-            @include vp-992 {
+            @include mixins.vp-992 {
                 margin: 0 0 12px;
             }
         }
@@ -155,16 +158,16 @@
         font-weight: 400;
         font-size: 18px;
         line-height: 24px;
-        color: $color-white;
+        color: variables.$color-white;
         letter-spacing: normal;
 
-        @include vp-992 {
+        @include mixins.vp-992 {
             width: 100%;
             display: block;
             font-size: 16px;
         }
 
-        @include vp-576 {
+        @include mixins.vp-576 {
             font-size: 14px;
             line-height: 20px;
         }
@@ -176,9 +179,9 @@
             margin: 0 -99% 0 3px;
             vertical-align: baseline;
 
-            border-bottom: 1px dotted $color-white;
+            border-bottom: 1px dotted variables.$color-white;
 
-            @include vp-992 {
+            @include mixins.vp-992 {
                 display: none;
             }
         }
@@ -193,10 +196,10 @@
         font-weight: 400;
         font-size: 18px;
         line-height: 24px;
-        color: $color-white;
+        color: variables.$color-white;
         vertical-align: bottom;
 
-        @include vp-992 {
+        @include mixins.vp-992 {
             margin: 0;
             padding: 0;
             display: block;
@@ -205,7 +208,7 @@
             line-height: 32px;
         }
 
-        @include vp-576{
+        @include mixins.vp-576{
             font-size: 18px;
             line-height: 24px;
         }

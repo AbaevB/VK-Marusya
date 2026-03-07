@@ -1,3 +1,6 @@
+@use "../base/mixins";
+@use "../base/variables";
+
 .top-10 {
     padding: 32px 0;
 
@@ -7,7 +10,7 @@
         font-size: 40px;
         line-height: 48px;
 
-        @include vp-576{
+        @include mixins.vp-576{
             margin: 0 0 40px;
             font-size: 24px;
             line-height: 32px;
@@ -15,7 +18,7 @@
     }
 
     &__list {
-        @include listReset;
+        @include mixins.listReset;
         counter-reset: num;
         position: relative;
         display: grid;
@@ -23,7 +26,7 @@
         column-gap: 40px;
         row-gap: 64px;
 
-        @include vp-1400 {
+        @include mixins.vp-1400 {
            grid-template-columns: repeat(4, 1fr);
            padding: 0 20px;
         }
@@ -33,7 +36,7 @@
 
        
 
-        @include vp-1200 {
+        @include mixins.vp-1200 {
          // Горизонтальная прокрутка на мобильных
 
         display: flex;
@@ -69,14 +72,14 @@
             padding: 8px 24px ;
             font-weight: 700;
             line-height: 28px;
-            background-color: $color-white;
-            color: $color-accent-secondary;
+            background-color: variables.$color-white;
+            color: variables.$color-accent-secondary;
             text-align: center;
             font-size: 24px;
             border-radius: 16px;
         }
 
-        @include vp-768{
+        @include mixins.vp-768{
           width: 224px;  
         }
     }

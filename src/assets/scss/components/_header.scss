@@ -1,3 +1,6 @@
+@use "../base/mixins";
+@use "../base/variables";
+
 .header {
     padding: 24px 0;
 
@@ -6,7 +9,7 @@
         max-width: 144px;
         flex-shrink: 0;
 
-        @include vp-768 {
+        @include mixins.vp-768 {
             margin-right: auto;
         }
     }
@@ -18,27 +21,27 @@
         justify-content: space-between;
         gap: 80px;
 
-        @include vp-768{
+        @include mixins.vp-768{
             gap: 20px;
 
         }
     }
 
     &__list {
-        @include listReset;
+        @include mixins.listReset;
         //width: 100%;
         display: flex;
         align-items: center;
         gap: 40px;
 
-        @include vp-768{
+        @include mixins.vp-768{
             gap: 20px;
         }
     }
 
     &__item {
      &:first-child{
-        @include vp-768{
+        @include mixins.vp-768{
             display: none;
         }
      }
@@ -57,18 +60,18 @@
         transition: border 300ms ease-in-out;
 
         &:hover {
-           border-color:  $color-accent;
+           border-color:  variables.$color-accent;
         }
 
         &:focus-visible {
-            border-color:  $color-accent;
+            border-color:  variables.$color-accent;
         }
     }
 
     &__link-icon    {
         display: none;
 
-        @include vp-768 {
+        @include mixins.vp-768 {
             display: block;
         }
     }
@@ -79,7 +82,7 @@
         line-height: 32px;
         color: inherit;
 
-        @include vp-768 {
+        @include mixins.vp-768 {
             display: none;
         }
     }
@@ -95,7 +98,7 @@
         display: block;
         width: 100%;
 
-        @include vp-768 {
+        @include mixins.vp-768 {
             display: none;
         }
     }
@@ -116,13 +119,13 @@
         padding-bottom: 12px;
         padding-right: 16px;
         padding-left: 52px;
-        background-color: $color-primary-hover;
-        color: $color-white;
+        background-color: variables.$color-primary-hover;
+        color: variables.$color-white;
         border-radius: 16px;
         border: none;
 
         &::placeholder  {
-          color: $color-white;
+          color: variables.$color-white;
           font-weight: 400;
           font-size: 18px;
           line-height: 24px;  
@@ -134,7 +137,7 @@
     &__search-btn   {
         display: none;
 
-        @include vp-768 {
+        @include mixins.vp-768 {
             display: block;
         }
     }
@@ -155,7 +158,7 @@
         line-height: 32px;
         color: inherit;
 
-        @include vp-768{
+        @include mixins.vp-768{
             display: none;
         }
     }
@@ -163,7 +166,7 @@
     &__bth-icon {
         display: none;
 
-        @include vp-768 {
+        @include mixins.vp-768 {
             display: block;
         }
     }
