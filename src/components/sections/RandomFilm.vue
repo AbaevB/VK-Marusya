@@ -192,7 +192,7 @@ const handleFavoriteClick = async () => {
             </div>
           </div> 
           <div class="random-film__image-wrapper">
-            <img class="random-film__image" :src="filmsStore.randomFilm.posterUrl" :alt="`Кадр из фильма ${filmsStore.randomFilm.title}`">
+            <img class="random-film__image" :src="filmsStore.randomFilm.backdropUrl" :alt="`Кадр из фильма ${filmsStore.randomFilm.title}`">
           </div>
         </template>
       </div>

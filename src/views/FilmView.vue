@@ -165,7 +165,7 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="film__image-wrapper">
-          <img class="film__image" :src="filmsStore.currentFilm.posterUrl" :alt="`Кадр из фильма ${filmsStore.currentFilm.title}`">
+          <img class="film__image" :src="filmsStore.currentFilm.backdropUrl" :alt="`Кадр из фильма ${filmsStore.currentFilm.title}`">
         </div>
         <div class="film__info">
           <h2 class="film__info-title">
