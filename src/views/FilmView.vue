@@ -156,9 +156,12 @@ onUnmounted(() => {
             <button class="btn btn-primary" type="button" @click="openTrailer">
               Трейлер
             </button>
-            <button class="btn btn-primary btn-primary--icon" type="button" @click="handleFavoriteClick">
-              <svg class="btn-primary__icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
+            <button class="btn btn-primary btn-primary--icon favorite-btn" type="button" @click="handleFavoriteClick">
+              <svg class="btn-primary__icon favorite-btn__icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
                 <use xlink:href="/images/sprite.svg#icon-heart"></use>
+              </svg>
+              <svg class="btn-primary__icon favorite-btn__icon favorite-btn__icon--hidden" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
+                <use xlink:href="/images/sprite.svg#icon-heart-solid"></use>
               </svg>
             </button>
             <span v-if="favoriteError" class="error-message">{{ favoriteError }}</span>

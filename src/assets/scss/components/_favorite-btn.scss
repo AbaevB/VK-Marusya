@@ -1,0 +1,23 @@
+// src/assets/scss/components/_favorite-btn.scss
+
+.favorite-btn {
+  
+
+  // По умолчанию: скрыть заполненное сердце
+  &__icon {
+    &--hidden {
+      display: none;
+    }
+  }
+
+  // Когда кнопка в состоянии "отмечено"
+  &--checked {
+    .favorite-btn__icon {
+      display: none; // Скрыть ВСЕ иконки
+    }
+
+    .favorite-btn__icon--hidden {
+      display: block; // Показать ТОЛЬКО скрытую (заполненную)
+    }
+  }
+}

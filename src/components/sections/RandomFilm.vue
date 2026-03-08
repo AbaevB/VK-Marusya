@@ -179,7 +179,7 @@ const handleFavoriteClick = async () => {
               <a class="btn btn-primary random-film__btn" :href="`/film/${filmsStore.randomFilm.id}`">
                 О фильме
               </a>
-              <button class="btn btn-primary btn-primary--icon random-film__btn" type="button" @click="handleFavoriteClick">
+              <button class="btn btn-primary btn-primary--icon random-film__btn favorite-btn" type="button" @click="handleFavoriteClick">
                 <svg class="btn-primary__icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                   <use xlink:href="/images/sprite.svg#icon-heart"></use>
                 </svg>
