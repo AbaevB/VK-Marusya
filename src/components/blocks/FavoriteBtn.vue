@@ -1,23 +1,3 @@
-<!-- src/components/blocks/FavoriteBtn.vue -->
-<template>
-  <button
-    class="favorite-btn"
-    :class="{ 'favorite-btn--checked': isFavorite }"
-    @click="handleClick"
-    aria-label="Добавить в избранное"
-  >
-    <!-- Пустое сердце -->
-    <svg class="favorite-btn__icon" width="24" height="24">
-      <use href="/img/icons/sprite.svg#heart-outline"></use>
-    </svg>
-
-    <!-- Заполненное сердце -->
-    <svg class="favorite-btn__icon favorite-btn__icon--hidden" width="24" height="24">
-      <use href="/img/icons/sprite.svg#heart-filled"></use>
-    </svg>
-  </button>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useUserStore } from '@/stores/user'
@@ -28,6 +8,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
 const userStore = useUserStore()
 const favoritesStore = useFavoritesStore()
 
@@ -36,10 +17,15 @@ const isFavorite = computed(() => favoritesStore.isFavorite(props.filmId))
 
 // Обработка клика
 const handleClick = async () => {
-  if (!userStore.isInitialized) return
+  if (!userStore.isInitialized) {
+    return
+  }
 
   if (!userStore.isAuthenticated) {
-    emit('auth-required')
+    // Открываем модальное окно авторизации
+    if (window.openAuthModal) {
+      window.openAuthModal()
+    }
     return
   }
 
@@ -49,9 +35,21 @@ const handleClick = async () => {
     console.error('Ошибка при изменении избранного:', error)
   }
 }
-
-// Эмит события для родителя (например, открыть модалку входа)
-const emit = defineEmits<{
-  (e: 'auth-required'): void
-}>()
 </script>
+
+<template>
+  <button 
+    class="btn btn-primary btn-primary--icon favorite-btn" 
+    :class="{ 'favorite-btn--checked': isFavorite }"
+    type="button"
+    @click="handleClick"
+    :aria-label="isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'"
+  >
+    <svg class="btn-primary__icon favorite-btn__icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
+      <use xlink:href="/images/sprite.svg#icon-heart"></use>
+    </svg>
+    <svg class="btn-primary__icon favorite-btn__icon favorite-btn__icon--active" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
+      <use xlink:href="/images/sprite.svg#icon-heart-solid"></use>
+    </svg>
+  </button>
+</template>

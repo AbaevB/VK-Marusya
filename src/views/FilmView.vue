@@ -2,16 +2,13 @@
 import { onMounted, ref, computed, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFilmsStore } from '@/stores/films'
-import { useUserStore } from '@/stores/user'
-import { useFavoritesStore } from '@/stores/favorites'
 import { getBackdropUrl, handleImageError } from '@/utils/images'
+import FavoriteBtn from '@/components/blocks/FavoriteBtn.vue'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
 
 const route = useRoute()
 const filmsStore = useFilmsStore()
-const userStore = useUserStore()
-const favoritesStore = useFavoritesStore()
 
 const filmId = computed(() => parseInt(route.params.id as string))
 const isTrailerModalOpen = ref(false)
@@ -20,33 +17,6 @@ let player: Plyr | null = null
 onMounted(() => {
   filmsStore.fetchFilmById(filmId.value)
 })
-
-const isFavorite = computed(() => {
-  return favoritesStore.isFavorite(filmId.value)
-})
-
-const favoriteError = ref<string | null>(null)
-
-const handleFavoriteClick = async () => {
-  if (!userStore.isInitialized) {
-    return
-  }
-  
-  if (!userStore.isAuthenticated) {
-    // Открываем модальное окно авторизации
-    if (window.openAuthModal) {
-      window.openAuthModal()
-    }
-    return
-  }
-  
-  favoriteError.value = null
-  try {
-    await favoritesStore.toggleFavorite(filmId.value)
-  } catch (error: any) {
-    favoriteError.value = error?.response?.data?.message || 'Не удалось добавить в избранное'
-  }
-}
 
 const videoElement = ref<HTMLVideoElement | null>(null)
 
@@ -160,15 +130,7 @@ watch(
             <button class="btn btn-primary" type="button" @click="openTrailer">
               Трейлер
             </button>
-            <button class="btn btn-primary btn-primary--icon favorite-btn" type="button" @click="handleFavoriteClick">
-              <svg class="btn-primary__icon favorite-btn__icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
-                <use xlink:href="/images/sprite.svg#icon-heart"></use>
-              </svg>
-              <svg class="btn-primary__icon favorite-btn__icon favorite-btn__icon--hidden" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
-                <use xlink:href="/images/sprite.svg#icon-heart-solid"></use>
-              </svg>
-            </button>
-            <span v-if="favoriteError" class="error-message">{{ favoriteError }}</span>
+            <FavoriteBtn :film-id="filmId" />
           </div>
         </div>
   <div class="film__image-wrapper">
