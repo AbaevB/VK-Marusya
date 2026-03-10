@@ -2,10 +2,26 @@
  * Утилиты для работы с изображениями
  */
 
+// Базовый путь для GitHub Pages
+const BASE_URL = import.meta.env.BASE_URL || '/'
+
 // Пути к плейсхолдерам
 const PLACEHOLDER_POSTER = '/images/placeholders/poster-placeholder.png'
 const PLACEHOLDER_BACKDROP = '/images/placeholders/backdrop-placeholder.png'
 
+/**
+ * Добавляет базовый путь к URL изображения
+ */
+export const getImageUrl = (url: string): string => {
+  if (!url) return ''
+  // Если URL уже абсолютный или содержит base, возвращаем как есть
+  if (url.startsWith('http') || url.startsWith('data:')) {
+    return url
+  }
+  // Добавляем базовый путь
+  return `${BASE_URL}${url.replace(/^\//, '')}`
+}
+  
 /**
  * Проверяет, является ли URL изображения пустым или некорректным
  */
@@ -28,9 +44,9 @@ export const isValidImageUrl = (url: string | null | undefined): boolean => {
  */
 export const getPosterUrl = (posterUrl: string | null | undefined): string => {
   if (isValidImageUrl(posterUrl)) {
-    return posterUrl!
+    return getImageUrl(posterUrl!)
   }
-  return PLACEHOLDER_POSTER
+  return getImageUrl(PLACEHOLDER_POSTER)
 }
 
 /**
@@ -38,9 +54,9 @@ export const getPosterUrl = (posterUrl: string | null | undefined): string => {
  */
 export const getBackdropUrl = (backdropUrl: string | null | undefined): string => {
   if (isValidImageUrl(backdropUrl)) {
-    return backdropUrl!
+    return getImageUrl(backdropUrl!)
   }
-  return PLACEHOLDER_BACKDROP
+  return getImageUrl(PLACEHOLDER_BACKDROP)
 }
 
 /**
@@ -51,5 +67,5 @@ export const handleImageError = (
   type: 'poster' | 'backdrop' = 'poster'
 ): void => {
   const target = event.target as HTMLImageElement
-  target.src = type === 'poster' ? PLACEHOLDER_POSTER : PLACEHOLDER_BACKDROP
+  target.src = type === 'poster' ? getImageUrl(PLACEHOLDER_POSTER) : getImageUrl(PLACEHOLDER_BACKDROP)
 }

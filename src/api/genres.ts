@@ -1,4 +1,5 @@
 import api from './index'
+import { getImageUrl } from '@/utils/images'
 
 export interface Genre {
   id: number
@@ -19,7 +20,7 @@ export const genresApi = {
     return genres.data.map((name, index) => ({
       id: index + 1,
       name,
-      image: `/images/genres/genre-${index + 1}.png`,
+      image: getImageUrl(`/images/genres/genre-${index + 1}.png`),
     }))
   },
 }
