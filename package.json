@@ -2,7 +2,7 @@
   "name": "marusia",
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://nlp-core-team.github.io/marusia/",
+  "homepage": "https://nlp-core-team.github.io/VK-Marusya/",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",

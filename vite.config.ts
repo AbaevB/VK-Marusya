@@ -7,7 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/marusia/',
+  base: '/VK-Marusya/',
   plugins: [
     vue(),
     vueJsx(),
