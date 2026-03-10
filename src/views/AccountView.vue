@@ -14,6 +14,8 @@ const user = computed(() => userStore.user)
 const activeTab = ref(0)
 
 onMounted(async () => {
+  document.title = 'Аккаунт | VK-Маруся'
+  
   if (!userStore.isAuthenticated) {
     router.push({ name: 'home' })
     return

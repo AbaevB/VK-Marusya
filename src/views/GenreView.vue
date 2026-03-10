@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFilmsStore } from '@/stores/films'
 import FilmCard from '@/components/blocks/FilmCard.vue'
@@ -9,11 +9,20 @@ const filmsStore = useFilmsStore()
 
 const genreName = computed(() => route.params.genre as string)
 
+const updateTitle = () => {
+  if (genreName.value) {
+    document.title = `${genreName.value} | VK-Маруся`
+  }
+}
+
 onMounted(() => {
   if (genreName.value) {
     filmsStore.fetchFilmsByGenre(genreName.value)
   }
+  updateTitle()
 })
+
+watch(genreName, updateTitle)
 
 const loadMore = () => {
   filmsStore.loadMoreFilms(genreName.value)

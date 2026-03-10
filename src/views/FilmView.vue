@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, nextTick } from 'vue'
+import { onMounted, ref, computed, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFilmsStore } from '@/stores/films'
 import { useUserStore } from '@/stores/user'
@@ -96,6 +96,16 @@ const closeTrailer = () => {
 const onImageError = (event: Event) => {
   handleImageError(event, 'backdrop')
 }
+
+// Обновление title при загрузке фильма
+watch(
+  () => filmsStore.currentFilm,
+  (film) => {
+    if (film?.title) {
+      document.title = `${film.title} | VK-Маруся`
+    }
+  }
+)
 </script>
 
 <template>
