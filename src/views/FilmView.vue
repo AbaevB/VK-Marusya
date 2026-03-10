@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, onUnmounted, nextTick } from 'vue'
+import { onMounted, ref, computed, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFilmsStore } from '@/stores/films'
 import { useUserStore } from '@/stores/user'
 import { useFavoritesStore } from '@/stores/favorites'
+import { getBackdropUrl, handleImageError } from '@/utils/images'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
 
@@ -90,18 +91,11 @@ const openTrailer = async () => {
 
 const closeTrailer = () => {
   isTrailerModalOpen.value = false
-  // Очищаем плеер
-  if (player) {
-    player.destroy()
-    player = null
-  }
 }
 
-onUnmounted(() => {
-  if (player) {
-    player.destroy()
-  }
-})
+const onImageError = (event: Event) => {
+  handleImageError(event, 'backdrop')
+}
 </script>
 
 <template>
@@ -167,9 +161,14 @@ onUnmounted(() => {
             <span v-if="favoriteError" class="error-message">{{ favoriteError }}</span>
           </div>
         </div>
-        <div class="film__image-wrapper">
-          <img class="film__image" :src="filmsStore.currentFilm.backdropUrl" :alt="`Кадр из фильма ${filmsStore.currentFilm.title}`">
-        </div>
+  <div class="film__image-wrapper">
+    <img 
+      class="film__image" 
+      :src="getBackdropUrl(filmsStore.currentFilm.backdropUrl)" 
+      :alt="`Кадр из фильма ${filmsStore.currentFilm.title}`"
+      @error="onImageError"
+    >
+  </div>
         <div class="film__info">
           <h2 class="film__info-title">
             О фильме 

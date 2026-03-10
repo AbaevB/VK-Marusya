@@ -1,10 +1,11 @@
 <!-- src/components/sections/RandomFilm.vue -->
 <script setup lang="ts">
-import { onMounted, ref, nextTick, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref, nextTick } from 'vue'
 import { useFilmsStore } from '@/stores/films'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useFavoritesStore } from '@/stores/favorites'
+import { getBackdropUrl, handleImageError } from '@/utils/images'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
 
@@ -118,6 +119,10 @@ const handleFavoriteClick = async () => {
     console.error('Ошибка при работе с избранным:', error)
   }
 }
+
+const onImageError = (event: Event) => {
+  handleImageError(event, 'backdrop')
+}
 </script>
 <template>
   <section class="random-film">
@@ -192,7 +197,12 @@ const handleFavoriteClick = async () => {
             </div>
           </div> 
           <div class="random-film__image-wrapper">
-            <img class="random-film__image" :src="filmsStore.randomFilm.backdropUrl" :alt="`Кадр из фильма ${filmsStore.randomFilm.title}`">
+            <img 
+              class="random-film__image" 
+              :src="getBackdropUrl(filmsStore.randomFilm.backdropUrl)" 
+              :alt="`Кадр из фильма ${filmsStore.randomFilm.title}`"
+              @error="onImageError"
+            >
           </div>
         </template>
       </div>
