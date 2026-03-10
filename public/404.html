@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VK-Маруся</title>
   <script>
-    // Перенаправляем все 404 на главную страницу
-    // GitHub Pages поддерживает только клиентский роутинг через этот трюк
-    sessionStorage.redirect = window.location.pathname;
-    window.location.href = '/VK-Marusya/';
+    // Перенаправляем все 404 на главную страницу с hash роутингом
+    var path = window.location.pathname;
+    // Сохраняем путь для восстановления
+    sessionStorage.redirect = path;
+    // Перенаправляем на главную с hash
+    window.location.href = '/VK-Marusya/#' + path;
   </script>
 </head>
 <body>

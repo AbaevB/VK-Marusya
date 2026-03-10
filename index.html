@@ -11,10 +11,11 @@
       (function() {
         var redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
-        if (redirect && redirect !== window.location.pathname) {
+        if (redirect) {
           // Небольшая задержка чтобы Vue успел загрузиться
           setTimeout(function() {
-            window.history.replaceState(null, '', redirect);
+            // Используем hash роутинг
+            window.location.hash = redirect;
           }, 100);
         }
       })();
