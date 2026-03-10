@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, onUnmounted, nextTick } from 'vue'
+import { onMounted, ref, computed, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFilmsStore } from '@/stores/films'
-import { useUserStore } from '@/stores/user'
-import { useFavoritesStore } from '@/stores/favorites'
+import { getBackdropUrl, handleImageError } from '@/utils/images'
+import FavoriteBtn from '@/components/blocks/FavoriteBtn.vue'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
 
 const route = useRoute()
 const filmsStore = useFilmsStore()
-const userStore = useUserStore()
-const favoritesStore = useFavoritesStore()
 
 const filmId = computed(() => parseInt(route.params.id as string))
 const isTrailerModalOpen = ref(false)
@@ -19,33 +17,6 @@ let player: Plyr | null = null
 onMounted(() => {
   filmsStore.fetchFilmById(filmId.value)
 })
-
-const isFavorite = computed(() => {
-  return favoritesStore.isFavorite(filmId.value)
-})
-
-const favoriteError = ref<string | null>(null)
-
-const handleFavoriteClick = async () => {
-  if (!userStore.isInitialized) {
-    return
-  }
-  
-  if (!userStore.isAuthenticated) {
-    // Открываем модальное окно авторизации
-    if (window.openAuthModal) {
-      window.openAuthModal()
-    }
-    return
-  }
-  
-  favoriteError.value = null
-  try {
-    await favoritesStore.toggleFavorite(filmId.value)
-  } catch (error: any) {
-    favoriteError.value = error?.response?.data?.message || 'Не удалось добавить в избранное'
-  }
-}
 
 const videoElement = ref<HTMLVideoElement | null>(null)
 
@@ -90,18 +61,21 @@ const openTrailer = async () => {
 
 const closeTrailer = () => {
   isTrailerModalOpen.value = false
-  // Очищаем плеер
-  if (player) {
-    player.destroy()
-    player = null
-  }
 }
 
-onUnmounted(() => {
-  if (player) {
-    player.destroy()
+const onImageError = (event: Event) => {
+  handleImageError(event, 'backdrop')
+}
+
+// Обновление title при загрузке фильма
+watch(
+  () => filmsStore.currentFilm,
+  (film) => {
+    if (film?.title) {
+      document.title = `${film.title} | VK-Маруся`
+    }
   }
-})
+)
 </script>
 
 <template>
@@ -156,17 +130,17 @@ onUnmounted(() => {
             <button class="btn btn-primary" type="button" @click="openTrailer">
               Трейлер
             </button>
-            <button class="btn btn-primary btn-primary--icon" type="button" @click="handleFavoriteClick">
-              <svg class="btn-primary__icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
-                <use xlink:href="/images/sprite.svg#icon-heart"></use>
-              </svg>
-            </button>
-            <span v-if="favoriteError" class="error-message">{{ favoriteError }}</span>
+            <FavoriteBtn :film-id="filmId" />
           </div>
         </div>
-        <div class="film__image-wrapper">
-          <img class="film__image" :src="filmsStore.currentFilm.posterUrl" :alt="`Кадр из фильма ${filmsStore.currentFilm.title}`">
-        </div>
+  <div class="film__image-wrapper">
+    <img 
+      class="film__image" 
+      :src="getBackdropUrl(filmsStore.currentFilm.backdropUrl)" 
+      :alt="`Кадр из фильма ${filmsStore.currentFilm.title}`"
+      @error="onImageError"
+    >
+  </div>
         <div class="film__info">
           <h2 class="film__info-title">
             О фильме 
