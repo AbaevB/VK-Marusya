@@ -21,6 +21,7 @@ const fetchGenres = async () => {
 }
 
 onMounted(() => {
+  document.title = 'Жанры | VK-Маруся'
   fetchGenres()
 })
 </script>

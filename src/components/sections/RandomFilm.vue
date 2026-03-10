@@ -1,17 +1,15 @@
 <!-- src/components/sections/RandomFilm.vue -->
 <script setup lang="ts">
-import { onMounted, ref, nextTick, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref, nextTick } from 'vue'
 import { useFilmsStore } from '@/stores/films'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'
-import { useFavoritesStore } from '@/stores/favorites'
+import { getBackdropUrl, handleImageError } from '@/utils/images'
+import FavoriteBtn from '@/components/blocks/FavoriteBtn.vue'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
 
 const filmsStore = useFilmsStore()
 const router = useRouter()
-const userStore = useUserStore()
-const favoritesStore = useFavoritesStore()
 const isLoading = ref(false)
 let player: Plyr | null = null
 
@@ -98,25 +96,8 @@ onUnmounted(() => {
   }
 })
 
-const handleFavoriteClick = async () => {
-  if (!userStore.isInitialized) {
-    return
-  }
-  
-  if (!userStore.isAuthenticated) {
-    if (window.openAuthModal) {
-      window.openAuthModal()
-    }
-    return
-  }
-  
-  if (!filmsStore.randomFilm) return
-  
-  try {
-    await favoritesStore.toggleFavorite(filmsStore.randomFilm.id)
-  } catch (error) {
-    console.error('Ошибка при работе с избранным:', error)
-  }
+const onImageError = (event: Event) => {
+  handleImageError(event, 'backdrop')
 }
 </script>
 <template>
@@ -179,11 +160,7 @@ const handleFavoriteClick = async () => {
               <a class="btn btn-primary random-film__btn" :href="`/film/${filmsStore.randomFilm.id}`">
                 О фильме
               </a>
-              <button class="btn btn-primary btn-primary--icon random-film__btn" type="button" @click="handleFavoriteClick">
-                <svg class="btn-primary__icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                  <use xlink:href="/images/sprite.svg#icon-heart"></use>
-                </svg>
-              </button>
+              <FavoriteBtn v-if="filmsStore.randomFilm" :film-id="filmsStore.randomFilm.id" />
               <button class="btn btn-primary btn-primary--icon random-film__btn" type="button" @click="getNewRandomFilm">
                 <svg class="btn-primary__icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                   <use xlink:href="/images/sprite.svg#icon-reset"></use>
@@ -192,7 +169,12 @@ const handleFavoriteClick = async () => {
             </div>
           </div> 
           <div class="random-film__image-wrapper">
-            <img class="random-film__image" :src="filmsStore.randomFilm.posterUrl" :alt="`Кадр из фильма ${filmsStore.randomFilm.title}`">
+            <img 
+              class="random-film__image" 
+              :src="getBackdropUrl(filmsStore.randomFilm.backdropUrl)" 
+              :alt="`Кадр из фильма ${filmsStore.randomFilm.title}`"
+              @error="onImageError"
+            >
           </div>
         </template>
       </div>

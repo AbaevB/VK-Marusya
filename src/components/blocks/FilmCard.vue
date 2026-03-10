@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import type { Film } from '@/api/films'
+import { getPosterUrl, handleImageError } from '@/utils/images'
 
 interface Props {
   film: Film
@@ -12,6 +13,10 @@ const router = useRouter()
 const handleFilmClick = () => {
   router.push({ name: 'film', params: { id: props.film.id } })
 }
+
+const onImageError = (event: Event) => {
+  handleImageError(event, 'poster')
+}
 </script>
 
 <template>
@@ -19,6 +24,11 @@ const handleFilmClick = () => {
     <h3 class="visually-hidden">
       {{ film.title }}
     </h3>
-    <img class="film-card__image" :src="film.posterUrl" :alt="`Постер фильма ${film.title}`">
+    <img 
+      class="film-card__image" 
+      :src="getPosterUrl(film.posterUrl)" 
+      :alt="`Постер фильма ${film.title}`"
+      @error="onImageError"
+    >
   </a>
 </template>

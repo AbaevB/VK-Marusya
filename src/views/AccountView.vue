@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useFavoritesStore } from '@/stores/favorites'
 import FilmCard from '@/components/blocks/FilmCard.vue'
+import { getPosterUrl, handleImageError } from '@/utils/images'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -13,6 +14,8 @@ const user = computed(() => userStore.user)
 const activeTab = ref(0)
 
 onMounted(async () => {
+  document.title = 'Аккаунт | VK-Маруся'
+  
   if (!userStore.isAuthenticated) {
     router.push({ name: 'home' })
     return
@@ -70,6 +73,10 @@ const handleFilmHover = (filmId: number) => {
 
 const handleFilmLeave = () => {
   hoveredFilmId.value = null
+}
+
+const onImageError = (event: Event) => {
+  handleImageError(event, 'poster')
 }
 </script>
 
@@ -139,7 +146,12 @@ const handleFilmLeave = () => {
                     <h3 class="visually-hidden">
                       {{ film.title }}
                     </h3>
-                    <img class="film-card__image" :src="film.posterUrl" :alt="`Постер фильма ${film.title}`">
+                    <img 
+                      class="film-card__image" 
+                      :src="getPosterUrl(film.posterUrl)" 
+                      :alt="`Постер фильма ${film.title}`"
+                      @error="onImageError"
+                    >
                   </a> 
                 </li>
               </ul>

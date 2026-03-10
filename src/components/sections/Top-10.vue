@@ -2,12 +2,17 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useFilmsStore } from '@/stores/films'
+import { getPosterUrl, handleImageError } from '@/utils/images'
 
 const filmsStore = useFilmsStore()
 
 onMounted(() => {
   filmsStore.fetchTopFilms(10)
 })
+
+const onImageError = (event: Event) => {
+  handleImageError(event, 'poster')
+}
 </script>
 <template>
   <section class="top-10">
@@ -30,7 +35,12 @@ onMounted(() => {
             <h3 class="visually-hidden">
               {{ film.title }}
             </h3>
-            <img :src="film.posterUrl" :alt="`Постер фильма ${film.title}`" class="card__image">
+            <img 
+              :src="getPosterUrl(film.posterUrl)" 
+              :alt="`Постер фильма ${film.title}`" 
+              class="card__image"
+              @error="onImageError"
+            >
           </a>
         </li>
       </ol>
