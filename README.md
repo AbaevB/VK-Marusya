@@ -86,6 +86,7 @@ src/
 │   │   ├── Header.vue   # Шапка сайта
 │   │   ├── Footer.vue   # Подвал сайта
 │   │   ├── FilmCard.vue # Карточка фильма
+│   │   ├── FavoriteBtn.vue # Кнопка избранного
 │   │   └── Social.vue   # Социальные сети
 │   ├── modals/          # Модальные окна
 │   │   └── AuthModal.vue
@@ -98,6 +99,8 @@ src/
 │   ├── films.ts         # Фильмы
 │   ├── favorites.ts     # Избранное
 │   └── user.ts          # Пользователь
+├── utils/               # Утилиты
+│   └── images.ts        # Работа с изображениями и плейсхолдерами
 ├── views/               # Страницы
 │   ├── HomeView.vue     # Главная
 │   ├── GenresView.vue   # Жанры
@@ -111,7 +114,15 @@ src/
 │   ├── api-helpers.test.ts
 │   └── genres.test.ts
 ├── App.vue              # Корневой компонент
-└── main.ts              # Точка входа
+├── main.ts              # Точка входа
+└── types/               # TypeScript типы
+    └── global.d.ts      # Глобальные типы
+
+public/
+└── images/
+    └── placeholders/    # Плейсхолдеры изображений
+        ├── poster-placeholder.png
+        └── backdrop-placeholder.png
 ```
 
 ## Установка и запуск
@@ -169,13 +180,7 @@ npm run test:coverage
 - Для корректной работы необходимо отправлять запросы с `withCredentials: true`
 - При истечении сессии требуется повторная авторизация
 
-## Вклад в проект
 
-1. Сделайте форк репозитория
-2. Создайте ветку для новой функциональности (`git checkout -b feature/amazing-feature`)
-3. Зафиксируйте изменения (`git commit -m 'Add some amazing feature'`)
-4. Отправьте ветку в удалённый репозиторий (`git push origin feature/amazing-feature`)
-5. Откройте Pull Request
 
 ## Лицензия
 
