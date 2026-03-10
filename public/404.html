@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <title>Redirecting...</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VK-Маруся</title>
   <script>
-    var path = window.location.pathname;
-    var newPath = '/VK-Marusya/' + path;
-    if (!path.startsWith('/VK-Marusya/')) {
-      window.location.replace(newPath + (window.location.search || '') + (window.location.hash || ''));
-    }
+    // Перенаправляем все 404 на главную страницу
+    // GitHub Pages поддерживает только клиентский роутинг через этот трюк
+    sessionStorage.redirect = window.location.pathname;
+    window.location.href = '/VK-Marusya/';
   </script>
 </head>
 <body>
-  <p>Redirecting...</p>
+  <p>Загрузка...</p>
 </body>
 </html>
