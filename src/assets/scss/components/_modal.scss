@@ -1,5 +1,3 @@
-@use "../base/mixins";
-@use "../base/variables";
 
 .modal {
   display: none;
@@ -8,7 +6,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: variables.$color-border-modal;
+  background-color: $color-border-modal;
   z-index: 1000;
   
   &--active {
@@ -28,7 +26,7 @@
     border-radius: 100%;
     cursor: pointer;
 
-    @include mixins.vp-576 {
+    @include vp-576 {
       top: 20px;
       right: 20px;
     }

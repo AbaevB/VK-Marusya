@@ -1,5 +1,4 @@
-@use "../base/mixins";
-@use "../base/variables";
+
 
 .account {
   padding: 64px 0 0;
@@ -14,14 +13,14 @@
     font-weight: 700;
     font-size: 48px;
     line-height: 56px;
-    color: variables.$color-white;
+    color: $color-white;
   }
 
   &__tab-btn {
 
     &--active {
       pointer-events: none;
-      color: variables.$color-red;
+      color: $color-red;
     }
   }
 
@@ -51,12 +50,12 @@
     font-weight: 400;
     font-size: 24px;
     line-height: 32px;
-    color: variables.$color-white;
+    color: $color-white;
     cursor: pointer;
 
     &--active {
       pointer-events: none;
-      border-color: variables.$color-accent;
+      border-color: $color-accent;
     }
   }
 
@@ -65,19 +64,19 @@
   }
 
   &__film-list {
-    @include mixins.listReset;
+    @include listReset;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     column-gap: 40px;
     row-gap: 64px;
 
-    @include mixins.vp-1400  {
+    @include vp-1400  {
       grid-template-columns: repeat(4, 1fr);
       column-gap: 20px;
       row-gap: 40px;
     }
 
-    @include mixins.vp-1200  {
+    @include vp-1200  {
       display: flex;
         padding: 34px 24px;
         margin-right:  -20px;
@@ -115,8 +114,8 @@
     height: 40px;
     border: none;
     border-radius: 100%;
-    background-color: variables.$color-white;
-    color: variables.$color-black;
+    background-color: $color-white;
+    color: $color-black;
     cursor: pointer;
 
     &--active {
@@ -125,7 +124,7 @@
   }
 
   &__user-list  {
-    @include mixins.listReset;
+    @include listReset;
     margin: 0 0 64px;
     display: flex;
     flex-direction: column;
@@ -141,8 +140,8 @@
     border-radius: 100%;
     width: 60px;
     height: 60px;
-    background-color:  variables.$color-bg-light;
-    color: variables.$color-white;
+    background-color:  $color-bg-light;
+    color: $color-white;
     font-weight: 700;
     font-size: 24px;
     line-height: 32px;
@@ -168,13 +167,13 @@
     font-weight: 400;
     font-size: 18px;
     line-height: 24px;
-    color: variables.$color-white;
+    color: $color-white;
   }
 
   &__user-list-data {
     font-weight: 700;
     font-size: 24px;
     line-height: 32px;
-    color: variables.$color-white;
+    color: $color-white;
   }
 }

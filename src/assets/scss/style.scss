@@ -1,30 +1,30 @@
-@use 'base/variables';
-@use 'base/functions';
-@use 'base/mixins';
-@use 'global/fonts';
-@use 'global/global';
-@use 'global/visually-hidden';
-@use 'global/container';
-@use 'global/no-scroll';
+@import 'base/variables';
+@import 'base/functions';
+@import 'base/mixins';
+@import 'global/fonts';
+@import 'global/global';
+@import 'global/visually-hidden';
+@import 'global/container';
+@import 'global/no-scroll';
 
 
-@use 'components/header';
-@use 'components/btn';
-@use 'components/random-film';
+@import 'components/header';
+@import 'components/btn';
+@import 'components/random-film';
 
-@use 'components/top-10';
-@use 'components/card';
-@use 'components/all-genres';
-@use 'components/genre-card';
-@use 'components/genre';
-@use 'components/film-card';
-@use 'components/film';
-@use 'components/favorite-btn';
-@use 'components/account';
-@use 'components/social';
-@use 'components/footer';
-@use 'components/modal';
-@use 'components/form';
-@use 'components/preview';
-@use 'components/login';
+@import 'components/top-10';
+@import 'components/card';
+@import 'components/all-genres';
+@import 'components/genre-card';
+@import 'components/genre';
+@import 'components/film-card';
+@import 'components/film';
+@import 'components/favorite-btn';
+@import 'components/account';
+@import 'components/social';
+@import 'components/footer';
+@import 'components/modal';
+@import 'components/form';
+@import 'components/preview';
+@import 'components/login';
 

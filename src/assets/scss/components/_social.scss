@@ -1,12 +1,11 @@
-@use "../base/mixins";
 
 .social {
-    @include mixins.listReset;
+    @include listReset;
     display: flex;
     gap: 24px;
 
     &__icon {
-        @include mixins.vp-768{
+        @include vp-768{
             width: 24px;
             height: 24px;
         }

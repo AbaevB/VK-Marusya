@@ -1,4 +1,3 @@
-@use "variables";
 
 // src/assets/scss/base/_mixins.scss
 
@@ -100,39 +99,39 @@
 // Breakpoints
 
  @mixin vp-375 {
-	@media(max-width: variables.$vp-xs){
+	@media(max-width: $vp-xs){
 		@content;
 	}
  }
 
  @mixin vp-576 {
-	@media(max-width: variables.$vp-sm){
+	@media(max-width: $vp-sm){
 		@content;
 	}
  }
 
 
  @mixin vp-768 {
-	@media(max-width: variables.$vp-md){
+	@media(max-width: $vp-md){
 		@content;
 	}
  }
 
  @mixin vp-992 {
-	@media(max-width: variables.$vp-lg){
+	@media(max-width: $vp-lg){
 		@content;
 	}
  }
 
   @mixin vp-1200 {
-	@media(max-width: variables.$vp-xl){
+	@media(max-width: $vp-xl){
 		@content;
 	}
  }
 
 
  @mixin vp-1400 {
-	@media(max-width: variables.$vp-xxl){
+	@media(max-width: $vp-xxl){
 		@content;
 	}
  }

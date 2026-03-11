@@ -1,4 +1,3 @@
-@use "../base/variables";
 
 .film-card{
     display: block;
@@ -6,9 +5,9 @@
     //max-height: 336px;
     height: 100%;
     border-radius: 16px;
-     border: 1px solid variables.$color-border-light;
+     border: 1px solid $color-border-light;
      overflow: hidden;
-     box-shadow: 0px 0px 80px 0px variables.$color-border-shadow;
+     box-shadow: 0px 0px 80px 0px $color-border-shadow;
 
     &__image    {
         width: 100%;
