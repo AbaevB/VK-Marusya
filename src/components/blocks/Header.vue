@@ -108,7 +108,7 @@ const handleAuthSuccess = async () => {
                   placeholder="Поиск фильмов"
                 >
               </label>
-              <button type="submit" class="btn header__search-btn" aria-label="Найти">
+              <button type="button" class="btn header__search-btn" aria-label="Найти">
                 <svg width="24" height="24" class="header__form-icon" aria-hidden="true">
                   <use xlink:href="/images/sprite.svg#icon-search"></use>
                 </svg>
