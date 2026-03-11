@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VK-Маруся</title>
+  <script>
+    // Перенаправляем все 404 на главную страницу с hash роутингом
+    var path = window.location.pathname;
+    // Сохраняем путь для восстановления
+    sessionStorage.redirect = path;
+    // Перенаправляем на главную с hash (используем относительный путь)
+    window.location.href = './#' + path;
+  </script>
+</head>
+<body>
+  <p>Загрузка...</p>
+</body>
+</html>
