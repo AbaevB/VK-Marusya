@@ -3,6 +3,7 @@ import { onMounted, ref, computed, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFilmsStore } from '@/stores/films'
 import { getBackdropUrl, handleImageError } from '@/utils/images'
+import { getRatingClass } from '@/utils/rating'
 import FavoriteBtn from '@/components/blocks/FavoriteBtn.vue'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
@@ -67,6 +68,24 @@ const onImageError = (event: Event) => {
   handleImageError(event, 'backdrop')
 }
 
+// Вычисляемое свойство для класса рейтинга
+const ratingClass = computed(() => {
+  if (!filmsStore.currentFilm) return 'film__rating--outline'
+  return getRatingClass(filmsStore.currentFilm.tmdbRating, 'film__rating')
+})
+
+// Открытие модального окна - добавляем класс no-scroll
+const openTrailerWithScrollLock = async () => {
+  document.body.classList.add('no-scroll')
+  await openTrailer()
+}
+
+// Закрытие модального окна - убираем класс no-scroll
+const closeTrailerWithScrollLock = () => {
+  closeTrailer()
+  document.body.classList.remove('no-scroll')
+}
+
 // Обновление title при загрузке фильма
 watch(
   () => filmsStore.currentFilm,
@@ -93,7 +112,7 @@ watch(
         <div class="film__content">
           <ul class="film__content-top">
             <li class="film__content-top-item">
-              <div class="film__rating film__rating--green">
+              <div :class="['film__rating', ratingClass]">
                 <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                   <use xlink:href="/images/sprite.svg#icon-star"></use>
                 </svg>
@@ -127,7 +146,7 @@ watch(
             </p>
           </div>
           <div class="film__content-bottom">
-            <button class="btn btn-primary" type="button" @click="openTrailer">
+            <button class="btn btn-primary" type="button" @click="openTrailerWithScrollLock">
               Трейлер
             </button>
             <FavoriteBtn :film-id="filmId" />
@@ -200,9 +219,9 @@ watch(
     </div>
     
     <!-- Модальное окно трейлера с Plyr -->
-    <div v-if="isTrailerModalOpen" class="modal modal--active" @click.self="closeTrailer">
+    <div v-if="isTrailerModalOpen" class="modal modal--active" @click.self="closeTrailerWithScrollLock">
       <div class="preview">
-        <button type="button" class="modal__close" @click="closeTrailer">
+        <button type="button" class="modal__close" @click="closeTrailerWithScrollLock">
           <svg class="modal__close-icon" aria-hidden="true" width="13" height="13">
             <use xlink:href="/images/sprite.svg#icon-close-black"></use>
           </svg>

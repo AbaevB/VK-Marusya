@@ -100,6 +100,27 @@
         font-size: 18px;
         line-height: 24px;
         border-radius: 16px;
+
+        &--green {
+            background-color: $color-rating-green;
+        }
+
+        &--gold {
+            background-color: $color-rating-gold;
+        }
+
+        &--grey {
+            background-color: $color-rating-grey;
+        }
+
+        &--red {
+            background-color: $color-red;
+        }
+
+        &--outline {
+            background-color: transparent;
+            border: 1px solid $color-bg-light;
+        }
     }
 
     &__image-wrapper    {

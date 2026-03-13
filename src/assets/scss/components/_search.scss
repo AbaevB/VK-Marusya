@@ -15,7 +15,6 @@
     &__form {
         width: 100%;
         height: 48px;
-
     }
 
     &__label {
@@ -31,17 +30,21 @@
         transform: translateY(-50%);
     }
 
-    &__close { //Закрывает модальное окно
+    // Кнопка закрытия (крестик)
+    &__close {
         position: absolute;
         right: 16px;
         top: 50%;
         transform: translateY(-50%);
+        display: none;
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
 
-         display: none;
-
-         &--active { // При открытом модальном окне
+        &--active {
             display: block;
-         }
+        }
     }
 
     &__field {
@@ -51,6 +54,9 @@
         border: none;
         border-radius: 8px;
         outline: none;
+        color: $color-white;
+        font-size: 18px;
+        line-height: 24px;
 
         &::placeholder {
             font-size: 18px;
@@ -58,103 +64,258 @@
             color: $color-bg-light;
             padding-left: 52px;
         }
-
-        &--mobile {
-            display: none;
-        }
     }
 
-    &__btn { // При адаптиве поле ввода скрыто, кнопка появляется и окрывает поле ввода при клике
+    // Кнопка поиска для мобильных
+    &__btn {
         display: none;
         width: 24px;
         height: 24px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
 
         &--active {
             display: block;
+
+            @include vp-768 {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
     }
 
-
-
-// Выпадающий список
-
-&__list {
-    @include listReset ;
-    max-width: 559px;
-    overflow: hidden;
-    border-radius: 8px;
-}
-
-&__item:not(:last-child){
-    border-bottom: 1px solid $color-bg-light;
-}
-
-// карточка
-
-&__card {
-    display: flex;
-    padding: 20px 8px;
-    gap: 16px;
-    background-color: $color-bg-dark;
-    
-
-}
-
-&__card-img {
-   max-width: 40px; 
-}
-
-&__card-top {
-    @include listReset;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 0 0 8px;
-
-    font-size: 14px;
-    line-height: 20px;
-}
-
-&__card-rating  {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 5px 8px;
-    border-radius: 16px;
-    border: 1px solid transparent;
-
-    &--green    {
-        background-color: #308E21;
+    &__btn-icon {
+        color: $color-white;
     }
 
-    &--gold {
-      background-color: #A59400;
-  
+    // Выпадающий список
+
+    &__list {
+        @include listReset;
+        max-width: 559px;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 8px;
+        background-color: $color-bg-dark;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 100;
     }
 
-    &--grey {
-        background-color: #777;
+    &__item:not(:last-child) {
+        border-bottom: 1px solid $color-bg-light;
     }
 
-    &--red {
-        background-color: $color-red;
+    // Карточка фильма
+
+    &__card {
+        display: flex;
+        padding: 20px 8px;
+        gap: 16px;
+        background-color: $color-bg-dark;
+        text-decoration: none;
+        color: inherit;
+        transition: background-color 200ms ease;
+
+        &:hover {
+            background-color: rgba($color-bg-dark, 0.8);
+        }
     }
 
-    &--outline {
-       background-color: $color-bg-dark;
-       border: 1px solid $color-bg-light; 
+    &__card-img {
+        max-width: 40px;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 4px;
     }
 
+    &__card-content {
+        flex: 1;
+        min-width: 0;
+    }
 
-}
+    &__card-top {
+        @include listReset;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 8px;
+        flex-wrap: wrap;
+        font-size: 14px;
+        line-height: 20px;
+    }
 
-&__card-title {
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0;
-}
+    &__card-top-item {
+        display: flex;
+        align-items: center;
+    }
 
+    &__card-rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 8px;
+        border-radius: 16px;
+        border: 1px solid transparent;
 
+        &--green {
+            background-color: $color-rating-green;
+        }
 
+        &--gold {
+            background-color: $color-rating-gold;
+        }
+
+        &--grey {
+            background-color: $color-rating-grey;
+        }
+
+        &--red {
+            background-color: $color-red;
+        }
+
+        &--outline {
+            background-color: $color-bg-dark;
+            border: 1px solid $color-bg-light;
+        }
+    }
+
+    &__card-icon {
+        width: 10px;
+        height: 10px;
+        fill: $color-white;
+    }
+
+    &__card-rating-text {
+        color: $color-white;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    &__card-year,
+    &__card-genre,
+    &__card-duration {
+        color: $color-white;
+        font-weight: 400;
+    }
+
+    &__card-title {
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 24px;
+        letter-spacing: 0;
+        color: $color-white;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    // Индикатор загрузки и "ничего не найдено"
+    &__loading,
+    &__no-results {
+        max-width: 559px;
+        width: 100%;
+        padding: 20px 8px;
+        background-color: $color-bg-dark;
+        border-radius: 8px;
+        text-align: center;
+        color: $color-white;
+        font-size: 16px;
+        line-height: 24px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 100;
+    }
+
+    // Модальное окно поиска (мобильная версия)
+    &__modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: $color-bg-dark;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    &__form--modal {
+        position: sticky;
+        top: 0;
+        background-color: $color-bg-dark;
+        padding-bottom: 20px;
+        z-index: 10;
+    }
+
+    &__label--modal {
+        display: flex;
+        align-items: center;
+    }
+
+    &__field--modal {
+        padding-left: 52px;
+        padding-right: 80px;
+    }
+
+    &__clear {
+        position: absolute;
+        right: 60px;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    &__clear-icon {
+        color: $color-bg-light;
+    }
+
+    &__modal-close {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__list--modal {
+        position: static;
+        max-width: 100%;
+        border-radius: 0;
+    }
+
+    &__loading--modal,
+    &__no-results--modal {
+        position: static;
+        max-width: 100%;
+        border-radius: 0;
+    }
+
+    // Адаптивность - скрываем поле ввода на мобильных
+    @include vp-768 {
+        &__form {
+            display: none;
+        }
+
+        &__list {
+            max-width: 100%;
+        }
+    }
 }

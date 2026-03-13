@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useFavoritesStore } from '@/stores/favorites'
 import AuthModal from '@/components/modals/AuthModal.vue'
+import Search from '@/components/blocks/Search.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -34,12 +35,6 @@ const handleAccountClick = () => {
   } else {
     openAuthModal()
   }
-}
-
-const handleSearch = (event: Event) => {
-  event.preventDefault()
-  // TODO: Реализовать поиск
-  console.log('Поиск фильмов')
 }
 
 const openAuthModal = () => {
@@ -95,25 +90,7 @@ const handleAuthSuccess = async () => {
             </router-link>
           </li>
           <li class="header__item">
-            <form @submit.prevent="handleSearch" class="header__search">
-              <label for="search" class="header__search-label">
-                <svg class="header__search-icon" width="24" height="24">
-                  <use xlink:href="/images/sprite.svg#icon-search"></use>
-                </svg>
-                <input 
-                  class="header__search-field"  
-                  type="search" 
-                  name="search" 
-                  id="search"
-                  placeholder="Поиск фильмов"
-                >
-              </label>
-              <button type="button" class="btn header__search-btn" aria-label="Найти">
-                <svg width="24" height="24" class="header__form-icon" aria-hidden="true">
-                  <use xlink:href="/images/sprite.svg#icon-search"></use>
-                </svg>
-              </button>
-            </form>
+            <Search />
           </li>
         </ul>
       

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useUserStore } from '@/stores/user'
 import type { LoginData, RegisterData } from '@/api/auth'
 
@@ -14,6 +14,15 @@ interface Emits {
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
+
+// Добавляем/убираем класс no-scroll при открытии/закрытии модального окна
+watch(() => props.isOpen, (newValue) => {
+  if (newValue) {
+    document.body.classList.add('no-scroll')
+  } else {
+    document.body.classList.remove('no-scroll')
+  }
+})
 
 const userStore = useUserStore()
 const isLoginForm = ref(true)
