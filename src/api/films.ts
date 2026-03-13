@@ -59,7 +59,7 @@ export const filmsApi = {
 
   // Поиск фильмов по названию
   searchFilms(query: string, page = 1, limit = 10) {
-    return api.get<Film[]>(`/movie/search?query=${query}&page=${page}&limit=${limit}`)
+    return api.get<Film[]>(`/movie?title=${query}&page=${page}&limit=${limit}`)
   },
 
   // Получение фильмов по жанру

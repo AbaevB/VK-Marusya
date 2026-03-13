@@ -50,8 +50,24 @@ const searchFilms = async () => {
   isLoading.value = true
   
   try {
-    const response = await filmsApi.searchFilms(query, 1, MAX_RESULTS)
-    searchResults.value = response.data || []
+    // Запрашиваем больше результатов, чтобы отфильтровать по релевантности
+    const response = await filmsApi.searchFilms(query, 1, 20)
+    const data = response.data
+    
+    // Обрабатываем разные форматы ответа API
+    let allResults: Film[] = []
+    if (Array.isArray(data)) {
+      allResults = data
+    } else if (data && Array.isArray(data.films)) {
+      allResults = data.films
+    }
+    
+    // Фильтруем результаты: оставляем только те, где название начинается с поискового запроса
+    // и ограничиваем до MAX_RESULTS
+    const queryLower = query.toLowerCase()
+    searchResults.value = allResults
+      .filter(film => film.title?.toLowerCase().includes(queryLower))
+      .slice(0, MAX_RESULTS)
   } catch (error) {
     console.error('Ошибка поиска фильмов:', error)
     searchResults.value = []
@@ -136,7 +152,7 @@ const onImageError = (event: Event) => {
     
     <!-- Мобильная кнопка поиска -->
     <button 
-      class="btn search__btn search__btn--active" 
+      class="btn search__btn" 
       aria-label="Открыть поиск" 
       type="button"
       @click="openModal"
