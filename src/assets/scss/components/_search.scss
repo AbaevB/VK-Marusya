@@ -1,5 +1,160 @@
 // src/assets/scss/components/_search.scss
 
 .search {
+    position: relative;
+    max-width: 666px;
+    width: 100%;
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+
+    // Форма
+
+    &__form {
+        width: 100%;
+        height: 48px;
+
+    }
+
+    &__label {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    &__icon {
+        position: absolute;
+        top: 50%;
+        left: 16px;
+        transform: translateY(-50%);
+    }
+
+    &__close { //Закрывает модальное окно
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+
+         display: none;
+
+         &--active { // При открытом модальном окне
+            display: block;
+         }
+    }
+
+    &__field {
+        width: 100%;
+        height: 100%;
+        background-color: $color-bg-dark;
+        border: none;
+        border-radius: 8px;
+        outline: none;
+
+        &::placeholder {
+            font-size: 18px;
+            line-height: 24px;
+            color: $color-bg-light;
+            padding-left: 52px;
+        }
+
+        &--mobile {
+            display: none;
+        }
+    }
+
+    &__btn { // При адаптиве поле ввода скрыто, кнопка появляется и окрывает поле ввода при клике
+        display: none;
+        width: 24px;
+        height: 24px;
+
+        &--active {
+            display: block;
+        }
+    }
+
+
+
+// Выпадающий список
+
+&__list {
+    @include listReset ;
+    max-width: 559px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+&__item:not(:last-child){
+    border-bottom: 1px solid $color-bg-light;
+}
+
+// карточка
+
+&__card {
+    display: flex;
+    padding: 20px 8px;
+    gap: 16px;
+    background-color: $color-bg-dark;
     
+
+}
+
+&__card-img {
+   max-width: 40px; 
+}
+
+&__card-top {
+    @include listReset;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 8px;
+
+    font-size: 14px;
+    line-height: 20px;
+}
+
+&__card-rating  {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 8px;
+    border-radius: 16px;
+    border: 1px solid transparent;
+
+    &--green    {
+        background-color: #308E21;
+    }
+
+    &--gold {
+      background-color: #A59400;
+  
+    }
+
+    &--grey {
+        background-color: #777;
+    }
+
+    &--red {
+        background-color: $color-red;
+    }
+
+    &--outline {
+       background-color: $color-bg-dark;
+       border: 1px solid $color-bg-light; 
+    }
+
+
+}
+
+&__card-title {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0;
+}
+
+
+
 }
