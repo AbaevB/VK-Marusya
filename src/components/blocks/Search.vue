@@ -1,18 +1,220 @@
 <!-- src/components/blocks/Search.vue -->
 <template>
-    <form action="" method="GET" class="search">
-        <label for="search" class="search__label">
-            <svg class="search__icon" width="24" height="24">
-                <use xlink:href="/images/sprite.svg#icon-search"></use>
-            </svg>
-            <input class="search__field" type="search" name="search" id="search" placeholder="Поиск фильмов">
-        </label>
-        <button type="button" class="btn search__btn" aria-label="Найти">
-            <svg width="24" height="24" class="header__form-icon" aria-hidden="true">
-                <use xlink:href="/images/sprite.svg#icon-search"></use>
-            </svg>
-        </button>
-    </form>
+    <div class="search">
+
+            <form class="search__form" action method="GET">
+                <label class="search__label" for="search">
+                    <svg class="search__icon" width="24" height="24">
+                        <use xlink:href="/images/sprite.svg#icon-search"></use>
+                    </svg>
+                    <input class="search__field" id="search" type="search" name="search" placeholder="Поиск">
+
+                    <button type="button" class="btn search__close">
+                        <svg class="search__close-icon" width="24" height="24">
+                            <use xlink:href="/images/sprite.svg#icon-close"></use>
+                        </svg>
+                    </button>
+                </label>
+                <button class="btn search__btn" aria-label="Найти" type="button">
+                    <svg class="header__form-icon" aria-hidden="true" width="24" height="24">
+                        <use xlink:href="/images/sprite.svg#icon-search"></use>
+                    </svg>
+                </button>
+            </form>
+            <ul class="search__list">
+                <li class="search__item">
+                    <a class="search__card" href="#">
+                        <img class="search__card-img" src="https://cinemaguide.skillbox.cc/images/65175/kzIV8ImLNBPTg4cWNrQXQsDKwvS.jpg" alt>
+                        <div class="search__card-content">
+                          <ul class="search__card-top">
+                            <li class="search__card-top-item">
+                                <div class="search__card-rating search__card-rating--gold">
+                                    <svg class="search__card-icon" width="10" height="10">
+                                        
+                                    <use xlink:href="/images/sprite.svg#icon-star"></use>
+                                    </svg>
+                                    <span class="search__card-rating-text">
+                                        10.0
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-year">
+                                    2020
+                                </span>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-genre">
+                                    action
+                                </span>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-duration">
+                                    80 мин
+                                </span>
+                            </li>
+                          </ul>
+                          <h2 class="search__card-title">
+                            Lady Ninja Kasumi 5: Counter Attack
+                          </h2>  
+                        </div>
+                    </a>
+                </li>
+                <li class="search__item">
+                     <a class="search__card" href="#">
+                        <img class="search__card-img" src="https://cinemaguide.skillbox.cc/images/65175/kzIV8ImLNBPTg4cWNrQXQsDKwvS.jpg" alt>
+                        <div class="search__card-content">
+                          <ul class="search__card-top">
+                            <li class="search__card-top-item">
+                                <div class="search__card-rating search__card-rating--green">
+                                    <svg class="search__card-icon" width="10" height="10">
+                                        
+                                    <use xlink:href="/images/sprite.svg#icon-star"></use>
+                                    </svg>
+                                    <span class="search__card-rating-text">
+                                        7.5
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-year">
+                                    2020
+                                </span>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-genre">
+                                    action
+                                </span>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-duration">
+                                    80 мин
+                                </span>
+                            </li>
+                          </ul>
+                          <h2 class="search__card-title">
+                            Lady Ninja Kasumi 5: Counter Attack
+                          </h2>  
+                        </div>
+                    </a>
+                </li>
+                <li class="search__item">
+                     <a class="search__card" href="#">
+                        <img class="search__card-img" src="https://cinemaguide.skillbox.cc/images/65175/kzIV8ImLNBPTg4cWNrQXQsDKwvS.jpg" alt>
+                        <div class="search__card-content">
+                          <ul class="search__card-top">
+                            <li class="search__card-top-item">
+                                <div class="search__card-rating search__card-rating--grey">
+                                    <svg class="search__card-icon" width="10" height="10">
+                                        
+                                    <use xlink:href="/images/sprite.svg#icon-star"></use>
+                                    </svg>
+                                    <span class="search__card-rating-text">
+                                        6.4
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-year">
+                                    2020
+                                </span>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-genre">
+                                    action
+                                </span>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-duration">
+                                    80 мин
+                                </span>
+                            </li>
+                          </ul>
+                          <h2 class="search__card-title">
+                            Lady Ninja Kasumi 5: Counter Attack
+                          </h2>  
+                        </div>
+                    </a>
+                </li>
+                <li class="search__item">
+                     <a class="search__card" href="#">
+                        <img class="search__card-img" src="https://cinemaguide.skillbox.cc/images/65175/kzIV8ImLNBPTg4cWNrQXQsDKwvS.jpg" alt>
+                        <div class="search__card-content">
+                          <ul class="search__card-top">
+                            <li class="search__card-top-item">
+                                <div class="search__card-rating search__card-rating--outline">
+                                    <svg class="search__card-icon" width="10" height="10">
+                                        
+                                    <use xlink:href="/images/sprite.svg#icon-star"></use>
+                                    </svg>
+                                    <span class="search__card-rating-text">
+                                        4.4
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-year">
+                                    2020
+                                </span>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-genre">
+                                    action
+                                </span>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-duration">
+                                    80 мин
+                                </span>
+                            </li>
+                          </ul>
+                          <h2 class="search__card-title">
+                            Lady Ninja Kasumi 5: Counter Attack
+                          </h2>  
+                        </div>
+                    </a>
+                </li>
+                <li class="search__item">
+                     <a class="search__card" href="#">
+                        <img class="search__card-img" src="https://cinemaguide.skillbox.cc/images/65175/kzIV8ImLNBPTg4cWNrQXQsDKwvS.jpg" alt>
+                        <div class="search__card-content">
+                          <ul class="search__card-top">
+                            <li class="search__card-top-item">
+                                <div class="search__card-rating search__card-rating--red">
+                                    <svg class="search__card-icon" width="10" height="10">
+                                        
+                                    <use xlink:href="/images/sprite.svg#icon-star"></use>
+                                    </svg>
+                                    <span class="search__card-rating-text">
+                                        2.4
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-year">
+                                    2020
+                                </span>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-genre">
+                                    action
+                                </span>
+                            </li>
+                            <li class="search__card-top-item">
+                                <span class="search__card-duration">
+                                    80 мин
+                                </span>
+                            </li>
+                          </ul>
+                          <h2 class="search__card-title">
+                            Lady Ninja Kasumi 5: Counter Attack
+                          </h2>  
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        
+        </div>
 </template>
 <script setup>
 </script>
