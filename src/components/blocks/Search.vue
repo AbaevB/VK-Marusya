@@ -31,6 +31,9 @@ const showNoResults = computed(() => {
          !isLoading.value
 })
 
+// Проверка наличия текста поиска (для v-if)
+const hasSearchQuery = computed(() => Boolean(searchQuery.value))
+
 // Debounce таймер
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
@@ -48,7 +51,7 @@ const searchFilms = async () => {
   
   try {
     const response = await filmsApi.searchFilms(query, 1, MAX_RESULTS)
-    searchResults.value = response.films || []
+    searchResults.value = response.data || []
   } catch (error) {
     console.error('Ошибка поиска фильмов:', error)
     searchResults.value = []
@@ -108,7 +111,7 @@ const onImageError = (event: Event) => {
           <use xlink:href="/images/sprite.svg#icon-search"></use>
         </svg>
         <input 
-          ref="searchInputRef"
+          :ref="(el) => searchInputRef = el as HTMLInputElement"
           class="search__field" 
           id="search" 
           type="search" 
@@ -118,7 +121,7 @@ const onImageError = (event: Event) => {
         >
         <!-- Кнопка закрытия (крестик) - видна когда есть текст -->
         <button 
-          v-if="searchQuery" 
+          v-if="hasSearchQuery" 
           type="button" 
           class="btn search__close search__close--active"
           aria-label="Очистить"
@@ -212,7 +215,7 @@ const onImageError = (event: Event) => {
               <use xlink:href="/images/sprite.svg#icon-search"></use>
             </svg>
             <input 
-              ref="searchInputRef"
+              :ref="(el) => searchInputRef = el as HTMLInputElement"
               class="search__field search__field--modal" 
               id="search-mobile" 
               type="search" 
@@ -222,7 +225,7 @@ const onImageError = (event: Event) => {
             >
             <!-- Кнопка очистки -->
             <button 
-              v-if="searchQuery" 
+              v-if="hasSearchQuery" 
               type="button" 
               class="btn search__clear"
               aria-label="Очистить"
